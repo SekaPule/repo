@@ -84,9 +84,8 @@ public class ElementaryTraining {
         }
 
         /*
-        *   Cut off the last digit until value becomes one-digit.
-        *
-        */
+         *   Cut off the last digit until value becomes one-digit.
+         */
         while (valueCopyForProcessing > ONE_DIGIT_VALUE_UPPER_LIMIT) {
             valueCopyForProcessing /= 10;
             tailDigit *= 10;
@@ -130,17 +129,17 @@ public class ElementaryTraining {
         resultValue = value;
 
         for (int i = 1; i <= digitsCount; i++) {
-            if (i%2==0){
+            if (i % 2 == 0) {
 
                 /*
-                *   Recording the remainder after an odd position. ( 2345 -> 45)
-                */
-                remainder = resultValue % (roundedNumberValue/10);
+                 *   Recording the remainder after an odd position. ( 2345 -> 45)
+                 */
+                remainder = resultValue % (roundedNumberValue / 10);
 
                 /*
-                *   Clear digits from start of odd position. ( 2345 -> 2000 )
-                *   Add remainder to result value. (2345 -> 2000 + 45)
-                */
+                 *   Clear digits from start of odd position. ( 2345 -> 2000 )
+                 *   Add remainder to result value. (2345 -> 2000 + 45)
+                 */
                 resultValue = ((resultValue / roundedNumberValue) * roundedNumberValue) + remainder;
             }
 
