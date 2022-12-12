@@ -22,7 +22,7 @@ public class ElementaryTraining {
      * @return среднее значение для введенных чисел
      */
     public double averageValue(int firstValue, int secondValue) {
-        return ((double) firstValue + (double) secondValue) / 2;
+        return (double) (firstValue + secondValue) / 2;
     }
 
     /**
@@ -51,13 +51,7 @@ public class ElementaryTraining {
      * @return новое значение
      */
     public int changeValue(int value) {
-        if (value > 3) {
-            value += 10;
-        } else {
-            value -= 10;
-        }
-
-        return value;
+        return (value > 3) ? value + 10 : value - 10;
     }
 
     /**
@@ -122,7 +116,6 @@ public class ElementaryTraining {
 
         while (valueCopyForProcessing > ONE_DIGIT_VALUE_UPPER_LIMIT) {
             valueCopyForProcessing /= 10;
-            roundedNumberValue *= 10;
             digitsCount++;
         }
 
@@ -132,18 +125,18 @@ public class ElementaryTraining {
             if (i % 2 == 0) {
 
                 /*
-                 *   Recording the remainder after an odd position. ( 2345 -> 45)
+                 *   Recording the remainder after an odd position. ( 2345 -> 5)
                  */
                 remainder = resultValue % (roundedNumberValue / 10);
 
                 /*
-                 *   Clear digits from start of odd position. ( 2345 -> 2000 )
-                 *   Add remainder to result value. (2345 -> 2000 + 45)
+                 *   Clear digits from start of odd position. ( 2345 -> 2300 )
+                 *   Add remainder to result value. (2345 -> 2300 + 5)
                  */
                 resultValue = ((resultValue / roundedNumberValue) * roundedNumberValue) + remainder;
             }
 
-            roundedNumberValue /= 10;
+            roundedNumberValue *= 10;
         }
 
         return resultValue;
