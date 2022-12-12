@@ -69,15 +69,18 @@ public class ArraysTraining {
      * @return входящий массив в обратном порядке
      */
     public int[] reverse(int[] array) {
-        int[] reverseArray = new int[array.length];
+        int dataBroker;
         int j = array.length - 1; // counter for iteration in reverse order
 
-        for (int i = 0; i < array.length; i++) {
-            reverseArray[i] = array[j];
+        for (int i = 0; i < array.length/2; i++) {
+            dataBroker = array[i];
+            array[i] = array[j];
+            array[j] = dataBroker;
+
             j--;
         }
 
-        return reverseArray;
+        return array;
     }
 
     /**
@@ -95,7 +98,7 @@ public class ArraysTraining {
         int prePreviousNumber = 0;
 
         if (numbersCount < 1) {
-            return fibonacciNumbersArray;
+            return new int[0];
         }
 
         fibonacciNumbersArray[0] = 1;
