@@ -28,7 +28,7 @@ public class StringsTraining {
 
         for (int i = 0; i < text.length(); i++) {
 
-            if (i % 2 == 0) {
+            if (i % 2 != 0) {
                 resultText.append(text.charAt(i));
             }
         }
@@ -47,6 +47,10 @@ public class StringsTraining {
      * вернуть пустой массив
      */
     public int[] getArrayLastSymbol(String text) {
+        if (text.isEmpty()) {
+            return new int[0];
+        }
+
         int[] equalCharacterIndexArray;
         char lastCharacter = text.charAt(text.length() - 1);
         int equalCharacterIndexesCount = 0;
@@ -105,35 +109,37 @@ public class StringsTraining {
 
                 numberName = "";
 
-                if (text.charAt(i) == '0') {
-                    numberName = "Ноль";
-                }
-                if (text.charAt(i) == '1') {
-                    numberName = "Один";
-                }
-                if (text.charAt(i) == '2') {
-                    numberName = "Два";
-                }
-                if (text.charAt(i) == '3') {
-                    numberName = "Три";
-                }
-                if (text.charAt(i) == '4') {
-                    numberName = "Четыре";
-                }
-                if (text.charAt(i) == '5') {
-                    numberName = "Пять";
-                }
-                if (text.charAt(i) == '6') {
-                    numberName = "Шесть";
-                }
-                if (text.charAt(i) == '7') {
-                    numberName = "Семь";
-                }
-                if (text.charAt(i) == '8') {
-                    numberName = "Восемь";
-                }
-                if (text.charAt(i) == '9') {
-                    numberName = "Девять";
+                switch (text.charAt(i)) {
+                    case '0':
+                        numberName = "Ноль";
+                        break;
+                    case '1':
+                        numberName = "Один";
+                        break;
+                    case '2':
+                        numberName = "Два";
+                        break;
+                    case '3':
+                        numberName = "Три";
+                        break;
+                    case '4':
+                        numberName = "Четыре";
+                        break;
+                    case '5':
+                        numberName = "Пять";
+                        break;
+                    case '6':
+                        numberName = "Шесть";
+                        break;
+                    case '7':
+                        numberName = "Семь";
+                        break;
+                    case '8':
+                        numberName = "Восемь";
+                        break;
+                    case '9':
+                        numberName = "Девять";
+                        break;
                 }
 
                 resultText.append(numberName);
@@ -154,17 +160,15 @@ public class StringsTraining {
      */
     public String capitalReverse(String text) {
         StringBuilder resultText = new StringBuilder();
-        String changedCharacter;
+        Character changedCharacter;
 
         for (int i = 0; i < text.length(); i++) {
-            if (((text.charAt(i) >= 'a') && (text.charAt(i) <= 'z'))
-                    || ((text.charAt(i) >= 'а') && (text.charAt(i) <= 'я'))) {
-                changedCharacter = String.valueOf(text.charAt(i)).toUpperCase(Locale.ROOT);
-            } else if (((text.charAt(i) >= 'A') && (text.charAt(i) <= 'Z'))
-                    || ((text.charAt(i) >= 'А') && (text.charAt(i) <= 'Я'))) {
-                changedCharacter = String.valueOf(text.charAt(i)).toLowerCase(Locale.ROOT);
-            } else {
-                changedCharacter = String.valueOf(text.charAt(i));
+            if (Character.isUpperCase(text.charAt(i))) {
+                changedCharacter = Character.toLowerCase(text.charAt(i));
+            }else if(Character.isLowerCase(text.charAt(i))){
+                changedCharacter = Character.toUpperCase(text.charAt(i));
+            }else{
+                changedCharacter = text.charAt(i);
             }
 
             resultText.append(changedCharacter);
