@@ -18,19 +18,19 @@ public class BlockIIITraining {
       Функция должна запускать times раз лямбда-выражение task . Используйте эту функцию для
       печати "I love Java" 10 раз.
      */
-    interface MyClosure {
-        void printMessage(String message);
+    public interface MyClosure {
+        void printMessage();
     }
 
-    MyClosure myClosure = (message) -> Log.e("TAG", message);
+    public  MyClosure myClosure = () -> Log.e("TAG", "I love Java");
 
     void startLambda() {
-        myClosure.printMessage("I love Java");
+        myClosure.printMessage();
     }
 
-    public void repeatTask(int times, Runnable task) {
-        for (int i = 0; i < 10; i++) {
-            myClosure.printMessage("I love Java");
+    public void repeatTask(int times, MyClosure task) {
+        for (int i = 0; i < times; i++) {
+            task.printMessage();
         }
     }
 
