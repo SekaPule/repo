@@ -93,23 +93,32 @@ public class CollectionsBlock<T extends Comparable> {
      * @throws NullPointerException если один из параметров null
      */
     public List<T> collectionTask3(@NonNull List<T> inputList, int n) {
-        List<T> copyInputList = new ArrayList<>();
         List<T> result;
         List<T> dataBroker;
-
-        copyInputList.addAll(inputList);
+        int shift;
 
         if (inputList == null) {
             throw new NullPointerException();
         }
 
+        if (inputList.isEmpty()) {
+            return inputList;
+        }
+
+        List<T> copyInputList = new ArrayList<>(inputList);
+
+        shift = n < 0 ? -n : n;
+        if (shift > inputList.size()) {
+            shift = shift % inputList.size();
+        }
+
         if (n > 0) {
-            result = copyInputList.subList(inputList.size() - n, inputList.size() - 1);
-            dataBroker = copyInputList.subList(0, inputList.size() - n - 1);
+            result = copyInputList.subList(inputList.size() - shift, inputList.size());
+            dataBroker = copyInputList.subList(0, inputList.size() - shift);
             result.addAll(dataBroker);
         } else if (n < 0) {
-            result = copyInputList.subList(n, inputList.size() - 1);
-            dataBroker = copyInputList.subList(0, n - 1);
+            result = copyInputList.subList(shift, inputList.size());
+            dataBroker = copyInputList.subList(0, shift);
             result.addAll(dataBroker);
         } else {
             return inputList;
@@ -163,138 +172,143 @@ public class CollectionsBlock<T extends Comparable> {
      */
 
 }
-    class Student {
-        public String name;
-        public String surname;
-        public String patronymic;
-        public int birthYear;
-        public int studyYear;
-        public String groupId;
-        public Mark[] marks;
 
-        Student(String name, String surname, String patronymic, int birthYear, int studyYear,
-                String groupNumber, Mark[] marks) {
-            this.name = name;
-            this.surname = surname;
-            this.patronymic = patronymic;
-            this.birthYear = birthYear;
-            this.studyYear = studyYear;
-            this.groupId = groupNumber;
-            this.marks = marks;
-        }
+class Student {
+    public String name;
+    public String surname;
+    public String patronymic;
+    public int birthYear;
+    public int studyYear;
+    public String groupId;
+    public Mark[] marks;
+
+    Student(String name, String surname, String patronymic, int birthYear, int studyYear,
+            String groupNumber, Mark[] marks) {
+        this.name = name;
+        this.surname = surname;
+        this.patronymic = patronymic;
+        this.birthYear = birthYear;
+        this.studyYear = studyYear;
+        this.groupId = groupNumber;
+        this.marks = marks;
+    }
+}
+
+
+class Mark {
+    public String subject;
+    public int value;
+
+    Mark(String subject, int value) {
+        this.subject = subject;
+        this.value = value;
+    }
+}
+
+
+class Students {
+    private final int MARKS_QUANTITY = 5;
+    private List<Student> students;
+
+    Students(List<Student> students) {
+        this.students = students;
     }
 
-
-    class Mark {
-        public String subject;
-        public int value;
-
-        Mark(String subject, int value) {
-            this.subject = subject;
-            this.value = value;
-        }
+    public void arrangeByStudyYear(int studyYear) {
+        students.sort(new StudyYearComparator());
     }
 
+    public double avgMarkInGroupBySubject(String groupID, String subject) {
+        int studentsInGroup = 0;
+        int markSum = 0;
 
-    class Students {
-        private final int MARKS_QUANTITY = 5;
-        private List<Student> students;
+        for (Student student : students) {
+            if (student.groupId.equals(groupID)) {
 
-        Students(List<Student> students) {
-            this.students = students;
-        }
-
-        public void arrangeByStudyYear(int studyYear) {
-            students.sort(new StudyYearComparator());
-        }
-
-        public double avgMarkInGroupBySubject(String groupID, String subject) {
-            int studentsInGroup = 0;
-            int markSum = 0;
-
-            for (Student student : students) {
-                if (student.groupId.equals(groupID)) {
-
-                    for (Mark mark : student.marks) {
-                        if (subject.equals(mark.subject)) {
-                            markSum += mark.value;
-                            studentsInGroup++;
-                        }
+                for (Mark mark : student.marks) {
+                    if (subject.equals(mark.subject)) {
+                        markSum += mark.value;
+                        studentsInGroup++;
                     }
                 }
             }
-
-            return (double) markSum / (double) studentsInGroup;
         }
 
-        public Student elderStudent() {
-            if (students.size() == 0) {
-                throw new NullPointerException();
-            }
-
-            Student eldStudent = students.get(0);
-
-            for (Student student : students) {
-                if (eldStudent.birthYear > student.birthYear) {
-                    eldStudent = student;
-                }
-            }
-
-            return eldStudent;
-        }
-
-        public Student youngerStudent() {
-            if (students.size() == 0) {
-                throw new NullPointerException();
-            }
-
-            Student yngStudent = students.get(0);
-
-            for (Student student : students) {
-                if (yngStudent.birthYear < student.birthYear) {
-                    yngStudent = student;
-                }
-            }
-
-            return yngStudent;
-        }
-
-        public Student bestAcademicRecord() {
-            int markSum;
-            double bestMarksAvg = 0;
-
-            if (students.size() == 0) {
-                throw new NullPointerException();
-            }
-
-            Student bestStudent = students.get(0);
-
-            for (Student student : students) {
-                markSum = 0;
-
-                for (Mark mark : student.marks) {
-                    markSum += mark.value;
-                }
-
-                if ((double) (markSum / MARKS_QUANTITY) > bestMarksAvg) {
-                    bestStudent = student;
-                    bestMarksAvg = (double) (markSum / MARKS_QUANTITY);
-                }
-            }
-
-            return bestStudent;
+        if (studentsInGroup == 0) {
+            return 0;
+        } else {
+            return (double) markSum / studentsInGroup;
         }
     }
 
+    public Student elderStudent() {
+        if (students.isEmpty()) {
+            throw new NullPointerException();
+        }
 
-    class StudyYearComparator implements Comparator<Student> {
-        @Override
-        public int compare(Student student1, Student student2) {
-            if (student1.studyYear == student2.studyYear) {
-                return student1.name.compareTo(student2.name);
-            } else {
-                return student1.studyYear - student2.studyYear;
+        Student eldStudent = students.get(0);
+
+        for (Student student : students) {
+            if (eldStudent.birthYear > student.birthYear) {
+                eldStudent = student;
             }
         }
+
+        return eldStudent;
     }
+
+    public Student youngerStudent() {
+        if (students.isEmpty()) {
+            throw new NullPointerException();
+        }
+
+        Student yngStudent = students.get(0);
+
+        for (Student student : students) {
+            if (yngStudent.birthYear < student.birthYear) {
+                yngStudent = student;
+            }
+        }
+
+        return yngStudent;
+    }
+
+    public Student bestAcademicRecord() {
+        int markSum;
+        double bestMarksAvg = 0;
+
+        if (students.isEmpty()) {
+            throw new NullPointerException();
+        }
+
+        Student bestStudent = students.get(0);
+
+        for (Student student : students) {
+            markSum = 0;
+
+            for (Mark mark : student.marks) {
+                markSum += mark.value;
+            }
+
+            if ((double) (markSum / MARKS_QUANTITY) > bestMarksAvg) {
+                bestStudent = student;
+                bestMarksAvg = ((double) markSum / MARKS_QUANTITY);
+            }
+        }
+
+        return bestStudent;
+    }
+}
+
+
+class StudyYearComparator implements Comparator<Student> {
+    @Override
+    public int compare(Student student1, Student student2) {
+        if (student1.studyYear == student2.studyYear) {
+            return student1.name.compareTo(student2.name);
+        } else {
+            return student1.studyYear - student2.studyYear;
+        }
+    }
+}
 
