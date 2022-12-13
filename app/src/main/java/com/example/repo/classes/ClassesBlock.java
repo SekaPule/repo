@@ -110,7 +110,7 @@ public interface ClassesBlock {
                 arrayElements.append(element).append("\n");
             }
 
-            Log.e("ARRAY", String.valueOf(arrayElements));
+            Log.e("ARRAY", arrayElements.toString());
         }
 
     }
@@ -126,13 +126,17 @@ public interface ClassesBlock {
         private final Point a;
         private final Point b;
         private final Point c;
-        private String objectState;
+        private double area;
+        private double perimeter;
+        private Point medianIntersectionPoint;
 
         public Triangle(Point a, Point b, Point c) {
             this.a = a;
             this.b = b;
             this.c = c;
-            this.objectState = "created";
+            this.area = computeArea();
+            this.perimeter = computePerimeter();
+            this.medianIntersectionPoint = computeMedianIntersectionPoint();
         }
 
         private double side(Point startPoint, Point endPoint) {
@@ -140,11 +144,11 @@ public interface ClassesBlock {
                     + Math.pow((endPoint.getX() - startPoint.getX()), 2));
         }
 
-        public double perimeter() {
+        private double computePerimeter() {
             return side(a, b) + side(b, c) + side(c, a);
         }
 
-        public double square() {
+        private double computeArea() {
             double firstSide = side(a, b);
             double secondSide = side(b, c);
             double thirdSide = side(c, a);
@@ -153,18 +157,22 @@ public interface ClassesBlock {
             return Math.sqrt(p * (p - firstSide) * (p - secondSide) * (p - thirdSide));
         }
 
-        public Point medianIntersectionPoint() {
+        private Point computeMedianIntersectionPoint() {
             Point p = new Point((b.getX() + c.getX()) / 2, (b.getY() + c.getY()) / 2);
 
             return new Point((a.getX() + 2 * p.getX()) / 3, (a.getY() + 2 * p.getY()) / 3);
         }
 
-        public String getObjectState() {
-            return objectState;
+        public double getArea() {
+            return area;
         }
 
-        public void setObjectState(String objectState) {
-            this.objectState = objectState;
+        public double getPerimeter() {
+            return perimeter;
+        }
+
+        public Point getMedianIntersectionPoint() {
+            return medianIntersectionPoint;
         }
 
         /*
@@ -326,7 +334,8 @@ public interface ClassesBlock {
         private String creditCardNumber;
         private String debit;
         private String credit;
-        private long roamingMeetingTime;
+        private long intercityNegotiationsTime;
+        private long cityNegotiationsTime;
 
         public Subscriber(
                 int id,
@@ -337,7 +346,8 @@ public interface ClassesBlock {
                 String creditCardNumber,
                 String debit,
                 String credit,
-                long roamingMeetingTime
+                long intercityNegotiationsTime,
+                long cityNegotiationsTime
         ) {
             this.id = id;
             this.surname = surname;
@@ -347,7 +357,8 @@ public interface ClassesBlock {
             this.creditCardNumber = creditCardNumber;
             this.debit = debit;
             this.credit = credit;
-            this.roamingMeetingTime = roamingMeetingTime;
+            this.intercityNegotiationsTime = intercityNegotiationsTime;
+            this.cityNegotiationsTime = cityNegotiationsTime;
         }
 
         int getId() {
@@ -382,8 +393,8 @@ public interface ClassesBlock {
             return credit;
         }
 
-        long getRoamingMeetingTime() {
-            return roamingMeetingTime;
+        long getIntercityNegotiationsTime() {
+            return intercityNegotiationsTime;
         }
 
         void setId(int id) {
@@ -418,17 +429,24 @@ public interface ClassesBlock {
             this.credit = credit;
         }
 
-        void setRoamingMeetingTime(int roamingMeetingTime) {
-            this.roamingMeetingTime = roamingMeetingTime;
+        void setIntercityNegotiationsTime(int intercityNegotiationsTime) {
+            this.intercityNegotiationsTime = intercityNegotiationsTime;
         }
 
         public void printSubscriberInfo() {
             String info = "\n" + id + "\n" + surname + "\n" + name + "\n" + patronymic + "\n"
                     + address + "\n" + creditCardNumber + "\n" + debit + "\n" + credit + "\n"
-                    + roamingMeetingTime + "\n";
+                    + intercityNegotiationsTime + "\n";
             Log.e("SUBSCRIBER", info);
         }
 
+        public long getCityNegotiationsTime() {
+            return cityNegotiationsTime;
+        }
+
+        public void setCityNegotiationsTime(long cityNegotiationsTime) {
+            this.cityNegotiationsTime = cityNegotiationsTime;
+        }
     }
 
 
@@ -445,7 +463,7 @@ public interface ClassesBlock {
             int searchedSubscribersIterator = 0;
 
             for (Subscriber sub : subscribers) {
-                if (sub.roamingMeetingTime > time) {
+                if (sub.intercityNegotiationsTime > time) {
                     searchedSubscribersCount++;
                 }
             }
@@ -453,7 +471,7 @@ public interface ClassesBlock {
             searchedSubscribers = new Subscriber[searchedSubscribersCount];
 
             for (Subscriber sub : subscribers) {
-                if (sub.roamingMeetingTime > time) {
+                if (sub.intercityNegotiationsTime > time) {
                     searchedSubscribers[searchedSubscribersIterator] = sub;
                     searchedSubscribersIterator++;
                 }
@@ -477,6 +495,27 @@ public interface ClassesBlock {
             }
 
             return array;
+        }
+
+        public Subscriber[] usedIntercityCommunication() {
+            Subscriber[] subsUsedIC;
+            int subsUsedICCounter = 0;
+
+            for (Subscriber sub : subscribers) {
+                if (sub.intercityNegotiationsTime>0){
+                    subsUsedICCounter++;
+                }
+            }
+
+            subsUsedIC = new Subscriber[subsUsedICCounter];
+
+            for (Subscriber sub : subscribers) {
+                if (sub.intercityNegotiationsTime>0){
+                    subsUsedIC[0]=sub;
+                }
+            }
+
+            return subsUsedIC;
         }
     }
 
@@ -551,7 +590,7 @@ public interface ClassesBlock {
         }
 
         public void registerEntrant(Entrant entrant) {
-            if (entrant.isRegistered == true) {
+            if (entrant.isRegistered) {
                 Log.e("WARNING", "Already registered!");
             } else {
                 entrants.add(entrant);
@@ -560,7 +599,7 @@ public interface ClassesBlock {
         }
 
         public void enrollEntrant(Entrant entrant) {
-            if (entrant.isEntranced == false) {
+            if (!entrant.isEntranced) {
                 if (entrant.isExamPassed) {
                     entrant.setEntranced(true);
                 }
@@ -651,7 +690,7 @@ public interface ClassesBlock {
         public void rateEntrant(Entrant entrant) {
             for (Answer answer : entrant.answers) {
                 answer.check();
-                if (entrant.isExamPassed == false) {
+                if (!entrant.isExamPassed) {
                     entrant.setExamPassed(true);
                 } else {
                     Log.e("WARNING", "Exam already passed!");
@@ -754,7 +793,7 @@ public interface ClassesBlock {
         }
 
         public void pay() {
-            if (order.isPayment() == true) {
+            if (order.isPayment()) {
                 Log.e("WARNING", "Вы уже оплатили заказ");
             } else {
                 order.setPayment(true);
@@ -762,9 +801,9 @@ public interface ClassesBlock {
         }
 
         public void take() {
-            if (order.isPayment() == false) {
+            if (!order.isPayment()) {
                 Log.e("WARNING", "Вы ещё не оплатили товар");
-            } else if (order.isRegister() == false) {
+            } else if (!order.isRegister()) {
                 Log.e("WARNING", "Ваша заявка ещё не обработана");
             } else {
                 Log.e("SUCCESS", "Спасибо за покупку!");
@@ -779,7 +818,7 @@ public interface ClassesBlock {
         private List<Customer> blackList = Collections.emptyList();
 
         public void registerOrder(Customer customer) {
-            if (customer.getOrder().isPayment() == true) {
+            if (customer.getOrder().isPayment()) {
                 customer.getOrder().setRegister(true);
             } else {
                 blackList.add(customer);
