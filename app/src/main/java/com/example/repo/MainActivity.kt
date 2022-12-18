@@ -1,8 +1,9 @@
 package com.example.repo
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.example.repo.kotlin.KotlinPart1
+import com.example.repo.kotlin.*
 import java.math.BigDecimal
 
 class MainActivity : AppCompatActivity() {
@@ -36,5 +37,64 @@ class MainActivity : AppCompatActivity() {
 
         //5.
         kotlinPart1.sum.invoke(13, 6)
+
+        /* part2 */
+
+        //4.
+        val user = User(1, "Ivan", 22, Type.FULL)
+        val user1 = User(1, "Ivan", 17, Type.FULL)
+        val user2 = User(1, "Ivan", 15, Type.FULL)
+
+        Log.e("ST", user.startTime.toString())
+        Thread.sleep(1000)
+        Log.e("RepeatST", user.startTime.toString())
+
+        //5.
+        val userList = mutableListOf(user)
+        userList.apply {
+            addAll(
+                listOf(
+                    User(2, "Ivan2", 22, Type.FULL),
+                    User(3, "Ivan3", 22, Type.DEMO),
+                    User(4, "Ivan4", 22, Type.FULL),
+                    User(5, "Ivan5", 22, Type.DEMO)
+                )
+            )
+
+        }
+
+        //6.
+        val fullAccessUserList = mutableListOf<User>()
+
+        userList.forEach {
+            if (it.type == Type.FULL) {
+                fullAccessUserList.add(it)
+            }
+        }
+
+        //7.
+        val userNameList = userList.map {
+            it.name
+        }
+
+        Log.e("FIRST", userNameList.first())
+        Log.e("LAST", userNameList.last())
+
+        //9.
+        val authCallback = object : AuthCallback {
+            override fun authSuccess() {
+                Log.e("AUTH", "Success")
+            }
+
+            override fun authFailed() {
+                Log.e("AUTH", "Failed")
+            }
+        }
+
+        //13.
+        user.doAction(Registration() , authCallback)
+        user.doAction(Login(user) , authCallback)
+        user1.doAction(Login(user1) , authCallback)
+        user2.doAction(Logout() , authCallback)
     }
 }
