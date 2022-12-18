@@ -26,12 +26,11 @@ class KotlinPart1 {
     class Book(override val price: BigDecimal?, override val wordCount: Int?) : Publication {
         override fun getType(): String {
             wordCount?.let {
-                return if (it <= 1000) {
-                    "Flash Fiction"
-                } else if (it <= 7500) {
-                    "Short Story"
-                } else {
-                    "Novel"
+                return when {
+                    it <= 0 -> "Incorrect"
+                    it in 1..1000 -> "Flash Fiction"
+                    it in 1001..7500 -> "Short Story"
+                    else -> "Novel"
                 }
             } ?: return "Null"
         }
