@@ -64,13 +64,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         //6.
-        val fullAccessUserList = mutableListOf<User>()
-
-        userList.forEach {
-            if (it.type == Type.FULL) {
-                fullAccessUserList.add(it)
-            }
-        }
+        val fullAccessUserList = userList.filter { it.type == Type.FULL }
 
         //7.
         val userNameList = userList.map {
@@ -92,9 +86,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         //13.
-        user.doAction(Registration() , authCallback)
-        user.doAction(Login(user) , authCallback)
-        user1.doAction(Login(user1) , authCallback)
-        user2.doAction(Logout() , authCallback)
+        user.doAction(Registration(), authCallback)
+        user.doAction(Login(user), authCallback)
+        user1.doAction(Login(user1), authCallback)
+        user2.doAction(Logout(), authCallback)
     }
 }
