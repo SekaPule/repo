@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ava_content_description">Аватар</string>
+    <string name="profile_title">Профиль</string>
+    <string name="edit_button_content_description">edit button</string>
+    <string name="birth_date_label">Дата рождения</string>
+    <string name="field_of_activity_label">Сфера деятельности</string>
+    <string name="get_push_notification_label">Получать push-уведомления</string>
+    <string name="your_friends_label">Ваши друзья</string>
+    <string name="logout_btn_text">Выйти из аккаунта</string>
+    <string name="app_logo_content_description">app logo</string>
+    <string name="loading_label">Загрузка…</string>
+    <string name="company_logo_content_description">company logo</string>
+    <string name="field_of_activity_template">Хирургия, травмотология</string>
+    <string name="birth_date_template">01 февраля 1980</string>
+    <string name="user_name_template">Константинов Денис</string>
+    <string name="bottom_nav_news_title">Новости</string>
+    <string name="bottom_nav_search_title">Поиск</string>
+    <string name="bottom_nav_help_title">Помочь</string>
+    <string name="bottom_nav_history_title">История</string>
+    <string name="bottom_nav_profile_title">Профиль</string>
+</resources>
