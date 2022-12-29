@@ -1,5 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">repo</string>
     <string name="ava_content_description">Аватар</string>
     <string name="profile_title">Профиль</string>
     <string name="edit_button_content_description">edit button</string>

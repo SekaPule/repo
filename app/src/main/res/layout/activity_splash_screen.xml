@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    tools:context=".ActivitySplashScreen"
+    android:gravity="center"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:layout_width="@dimen/app_logo_width"
+        android:layout_height="@dimen/app_logo_height"
+        android:layout_marginTop="@dimen/app_logo_spacing"
+        app:srcCompat="@drawable/ic_logo"
+        android:contentDescription="@string/app_logo_content_description" />
+
+    <ProgressBar
+        android:layout_marginTop="@dimen/progress_bar_spacing"
+        android:layout_marginBottom="@dimen/spacing_l"
+        android:layout_width="@dimen/progress_bar_size"
+        android:layout_height="@dimen/progress_bar_size"
+        android:theme="@style/CircularProgress"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/loading_label_spacing"
+        android:text="@string/loading_label"
+        android:textAppearance="@style/TextStyle10"/>
+
+    <ImageView
+        android:layout_width="@dimen/company_logo_width"
+        android:layout_height="@dimen/company_logo_height"
+        app:srcCompat="@drawable/ic_logo_mss"
+        android:contentDescription="@string/company_logo_content_description" />
+
+</LinearLayout>
