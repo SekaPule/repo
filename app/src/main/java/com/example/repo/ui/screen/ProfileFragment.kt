@@ -9,7 +9,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.repo.R
 import com.example.repo.databinding.FragmentProfileBinding
 import com.example.repo.model.Friend
-import com.example.repo.recycler.FriendsAdapter
+import com.example.repo.recycler.adapter.FriendsAdapter
+import com.example.repo.ui.fragments.EditImageDialog
 
 class ProfileFragment : Fragment() {
     private lateinit var binding: FragmentProfileBinding
@@ -32,6 +33,11 @@ class ProfileFragment : Fragment() {
                 Friend(id = 3, icon = R.drawable.avatar_3, fullName = "Виктор Кузнецов"),
             )
         )
+
+        binding.imageView.setOnClickListener {
+            val dialog = EditImageDialog(profileBinding = binding)
+            dialog.show(parentFragmentManager, null)
+        }
     }
 
     companion object {
