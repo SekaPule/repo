@@ -1,4 +1,4 @@
-package com.example.repo.recycler
+package com.example.repo.recycler.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
