@@ -11,7 +11,11 @@ class PagerAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter(fr
 
     override fun createFragment(position: Int): Fragment =
         when (position) {
-            0 -> ViewPagerEventFragment()
+            FIRST_POSITION -> ViewPagerEventFragment()
             else -> ViewPagerNKOFragment()
         }
+
+    companion object{
+        private const val FIRST_POSITION = 0
+    }
 }

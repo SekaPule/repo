@@ -27,7 +27,7 @@ class SearchFragment : Fragment() {
         binding.pager.adapter = PagerAdapter(fragmentActivity = requireActivity())
         TabLayoutMediator(binding.tabLayout, binding.pager) { tab, pos ->
             when (pos) {
-                0 -> {
+                FIRST_POSITION -> {
                     tab.text = getString(R.string.tab_by_event)
                 }
                 else -> tab.text = getString(R.string.tab_by_nko)
@@ -36,6 +36,8 @@ class SearchFragment : Fragment() {
     }
 
     companion object {
+        private const val FIRST_POSITION = 0
+
         @JvmStatic
         fun newInstance() = SearchFragment()
     }
