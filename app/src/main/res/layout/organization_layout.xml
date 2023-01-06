@@ -14,7 +14,6 @@
         android:layout_marginEnd="@dimen/organization_name_margin"
         android:ellipsize="end"
         android:maxLines="1"
-
         android:singleLine="true"
         android:textAppearance="@style/TextStyle8"
         app:layout_constraintBottom_toBottomOf="parent"

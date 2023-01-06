@@ -17,7 +17,6 @@
         android:layout_gravity="bottom|center"
         android:layout_marginBottom="@dimen/spacing_l"
         android:contentDescription="@string/cheese"
-
         android:src="@drawable/ic_camera"
         app:fabCustomSize="@dimen/camera_btn_size" />
 
