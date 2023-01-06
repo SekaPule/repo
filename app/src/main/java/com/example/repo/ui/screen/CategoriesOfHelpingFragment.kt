@@ -29,7 +29,7 @@ class CategoriesOfHelpingFragment : Fragment() {
             adapter = CategoriesAdapter()
             addItemDecoration(
                 MarginItemDecoration(
-                    resources.getDimension(R.dimen.spacing_xs).toInt(),
+                    resources.getDimensionPixelSize(R.dimen.spacing_xs),
                     SPAN_COUNT
                 )
             )
