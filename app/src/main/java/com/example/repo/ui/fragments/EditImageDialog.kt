@@ -3,16 +3,16 @@ package com.example.repo.ui.fragments
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
+import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
-import com.example.repo.R
+import androidx.fragment.app.setFragmentResult
 import com.example.repo.databinding.EditImageDialogLayoutBinding
-import com.example.repo.databinding.FragmentProfileBinding
 
 
-class EditImageDialog(private val profileBinding: FragmentProfileBinding) : DialogFragment() {
+class EditImageDialog : DialogFragment() {
     private lateinit var dialogBinding: EditImageDialogLayoutBinding
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return activity?.let {
+        return requireActivity().let {
             val builder = AlertDialog.Builder(it)
             // Get the layout inflater
             val inflater = requireActivity().layoutInflater
@@ -24,17 +24,17 @@ class EditImageDialog(private val profileBinding: FragmentProfileBinding) : Dial
 
             dialogBinding.deletePhotoItem.setOnClickListener {
                 this.dialog?.cancel()
-                profileBinding.imageView.setImageResource(R.drawable.ic_user_icon)
+                setFragmentResult("removeImageKey", bundleOf())
             }
 
             dialogBinding.makePhotoItem.setOnClickListener {
                 this.dialog?.cancel()
-                val dialog = CameraDialog(profileBinding = profileBinding)
+                val dialog = CameraDialog()
                 dialog.show(parentFragmentManager, null)
             }
 
             // Add action buttons
             builder.create()
-        } ?: throw IllegalStateException("Activity cannot be null")
+        }
     }
 }

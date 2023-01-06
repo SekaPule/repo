@@ -17,19 +17,21 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.setFragmentResult
 import com.example.repo.databinding.CameraDialogLayoutBinding
-import com.example.repo.databinding.FragmentProfileBinding
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-class CameraDialog(private val profileBinding: FragmentProfileBinding) : DialogFragment() {
+class CameraDialog : DialogFragment() {
     private var imageCapture: ImageCapture? = null
     private lateinit var cameraExecutor: ExecutorService
     private lateinit var dialogBinding: CameraDialogLayoutBinding
     private val dialog = this
+    private lateinit var uri : String
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         if (allPermissionsGranted()) {
@@ -43,7 +45,7 @@ class CameraDialog(private val profileBinding: FragmentProfileBinding) : DialogF
         }
 
         cameraExecutor = Executors.newSingleThreadExecutor()
-        return activity?.let {
+        return requireActivity().let {
             val builder = AlertDialog.Builder(it)
             // Get the layout inflater
             val inflater = requireActivity().layoutInflater
@@ -59,7 +61,7 @@ class CameraDialog(private val profileBinding: FragmentProfileBinding) : DialogF
 
             // Add action buttons
             builder.create()
-        } ?: throw IllegalStateException("Activity cannot be null")
+        }
     }
 
     private fun takePhoto() {
@@ -98,11 +100,11 @@ class CameraDialog(private val profileBinding: FragmentProfileBinding) : DialogF
 
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                     val msg = "Photo capture succeeded: ${output.savedUri}"
-
-                    profileBinding.imageView.setImageURI(output.savedUri)
                     Toast.makeText(requireActivity().baseContext, msg, Toast.LENGTH_SHORT).show()
                     dialog.getDialog()?.cancel()
                     Log.d(TAG, msg)
+                    uri = output.savedUri.toString()
+                    setFragmentResult("requestKey", bundleOf("bundleKey" to uri))
                 }
             }
         )
