@@ -20,14 +20,14 @@
         android:layout_marginBottom="@dimen/spacing_l"
         android:layout_width="@dimen/progress_bar_size"
         android:layout_height="@dimen/progress_bar_size"
-        android:theme="@style/CircularProgress"/>
+        android:theme="@style/CircularProgress" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/loading_label_spacing"
         android:text="@string/loading_label"
-        android:textAppearance="@style/TextStyle10"/>
+        android:textAppearance="@style/TextStyle10" />
 
     <ImageView
         android:layout_width="@dimen/company_logo_width"

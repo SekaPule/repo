@@ -19,4 +19,16 @@
     <string name="bottom_nav_help_title">Помочь</string>
     <string name="bottom_nav_history_title">История</string>
     <string name="bottom_nav_profile_title">Профиль</string>
+    <string name="help_title">Помочь</string>
+    <string name="choose_category_of_helping_text">Выберете категорию помощи</string>
+    <string name="dialog_delete_item_label">Удалить</string>
+    <string name="dialog_make_photo_item_label">Сделать снимок</string>
+    <string name="dialog_choose_photo_item_label">Выбрать фото</string>
+    <string name="tab_by_event">По мероприятиям</string>
+    <string name="tab_by_nko">По НКО</string>
+    <string name="key_label_template">Ключевые слова: мастер-класс, помощь</string>
+    <string name="result_label_template">Результаты поиска: 109 мероприятий</string>
+    <string name="cheese">cheese</string>
+    <string name="category_icon_description">category icon</string>
+    <string name="organization_description">description</string>
 </resources>

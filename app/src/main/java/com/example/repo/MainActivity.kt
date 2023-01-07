@@ -1,11 +1,13 @@
 package com.example.repo
 
 import android.os.Bundle
-
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import com.example.repo.databinding.ActivityMainBinding
+import com.example.repo.ui.screen.CategoriesOfHelpingFragment
 import com.example.repo.ui.screen.ProfileFragment
+import com.example.repo.ui.screen.SearchFragment
 import android.util.Log
 import com.example.repo.kotlin.*
 import java.math.BigDecimal
@@ -18,13 +20,38 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.navView.menu.findItem((R.id.navigationAccount)).isChecked = true
+        binding.navView.menu.findItem((R.id.navigationHelp)).isChecked = true
+        loadFragment(CategoriesOfHelpingFragment.newInstance())
+
+        binding.navView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.navigationHelp -> {
+                    loadFragment(CategoriesOfHelpingFragment.newInstance())
+
+                    true
+                }
+                R.id.navigationAccount -> {
+                    loadFragment(ProfileFragment.newInstance())
+
+                    true
+                }
+                R.id.navigationSearch -> {
+                    loadFragment(SearchFragment.newInstance())
+
+                    true
+                }
+                else -> false
+            }
+        }
+    }
+
+    private fun loadFragment(fragment: Fragment) {
+        // load fragment
         supportFragmentManager.commit {
             replace(
                 R.id.screenContainer,
-                ProfileFragment.newInstance()
+                fragment
             )
-            setReorderingAllowed(true)
         }
 
         val kotlinPart1 = KotlinPart1()
