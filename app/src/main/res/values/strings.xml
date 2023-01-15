@@ -39,4 +39,8 @@
     <string name="mail_post_label">Напишите нам</string>
     <string name="link_label">Перейти на сайт организаии</string>
     <string name="quantity_template">+102</string>
+    <string name="help_cloth">Помочь вещами</string>
+    <string name="become_vol">Стать волонтером</string>
+    <string name="prof_hellp">Проф помощь</string>
+    <string name="help_money">Помочь деньгами</string>
 </resources>
