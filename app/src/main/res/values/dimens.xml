@@ -34,4 +34,22 @@
     <dimen name="camera_btn_size">64dp</dimen>
     <dimen name="friend_icon_size">48dp</dimen>
     <dimen name="organization_name_margin">70dp</dimen>
+    <dimen name="date_top_spacing">9dp</dimen>
+    <dimen name="date_bot_spacing">7dp</dimen>
+    <dimen name="description_margin">26dp</dimen>
+    <dimen name="news_logo_width">113dp</dimen>
+    <dimen name="news_logo_height">20dp</dimen>
+    <dimen name="image_height">222dp</dimen>
+    <dimen name="icon_spacing_date">5dp</dimen>
+    <dimen name="bottom_nav_height">70dp</dimen>
+    <dimen name="people_icon_size">36dp</dimen>
+    <dimen name="people_background_height">76dp</dimen>
+    <dimen name="people_back_margin">30dp</dimen>
+    <dimen name="images_height">74dp</dimen>
+    <dimen name="main_image_width">205dp</dimen>
+    <dimen name="main_image_height">158dp</dimen>
+    <dimen name="link_padding">6dp</dimen>
+    <dimen name="mail_padding">14dp</dimen>
+    <dimen name="location_width">260dp</dimen>
+    <dimen name="filter_margin">17dp</dimen>
 </resources>
