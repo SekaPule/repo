@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigationСlothes"
+        android:icon="@drawable/ic_shirt"
+        android:title="@string/help_cloth" />
+    <item
+        android:id="@+id/navigationVolonter"
+        android:icon="@drawable/ic_hands"
+        android:title="@string/become_vol" />
+    <item
+        android:id="@+id/navigationProf"
+        android:icon="@drawable/ic_tools"
+        android:title="@string/prof_hellp" />
+    <item
+        android:id="@+id/navigationCoins"
+        android:icon="@drawable/ic_coins"
+        android:title="@string/help_money" />
+</menu>
