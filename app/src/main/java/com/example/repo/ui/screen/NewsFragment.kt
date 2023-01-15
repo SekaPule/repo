@@ -1,0 +1,94 @@
+package com.example.repo.ui.screen
+
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.repo.R
+import com.example.repo.data.DataProvider
+import com.example.repo.databinding.FragmentNewsBinding
+import com.example.repo.model.News
+import com.example.repo.recycler.adapter.NewsAdapter
+import com.example.repo.recycler.utils.NewsMarginItemDecoration
+
+
+class NewsFragment : Fragment() {
+    private lateinit var binding: FragmentNewsBinding
+    private lateinit var dataProvider: DataProvider
+    private val newsAdapter by lazy { NewsAdapter() }
+    private var newsList: MutableList<News>? = null
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        dataProvider = DataProvider(requireContext())
+        binding = FragmentNewsBinding.inflate(inflater)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        if (newsList == null || newsList!!.isEmpty()) {
+            newsList = dataProvider.getNewsFromAssets() as MutableList<News>
+        }
+
+        newsAdapter.submitList(newsList)
+
+        binding.newsRV.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = newsAdapter
+            addItemDecoration(
+                NewsMarginItemDecoration(
+                    resources.getDimensionPixelSize(R.dimen.spacing_xs)
+                )
+            )
+        }
+
+        binding.toolBar.title = resources.getString(R.string.news_title)
+        binding.toolBar.setOnMenuItemClickListener {
+            parentFragmentManager.commit {
+                replace(
+                    R.id.screenContainer,
+                    FilterFragment.newInstance()
+                )
+                addToBackStack("")
+            }
+
+
+            true
+        }
+
+        parentFragmentManager.setFragmentResultListener(
+            "filterResultKey",
+            requireActivity()
+        ) { _, bundle ->
+            val filters: List<String> = bundle.getParcelableArrayList("filterBundleKey")!!
+
+            if (filters.isNotEmpty()) {
+                val newsFiltered: List<News> = newsAdapter.currentList.filter { news ->
+                    filters.any { filter ->
+                        news.category!!.contains(filter)
+                    }
+                }
+
+                newsList = newsFiltered as MutableList<News>
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        newsAdapter.submitList(newsList)
+    }
+
+    companion object {
+        @JvmStatic
+        fun newInstance() = NewsFragment()
+    }
+}

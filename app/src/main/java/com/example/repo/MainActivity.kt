@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import com.example.repo.databinding.ActivityMainBinding
 import com.example.repo.ui.screen.CategoriesOfHelpingFragment
+import com.example.repo.ui.screen.NewsFragment
 import com.example.repo.ui.screen.ProfileFragment
 import com.example.repo.ui.screen.SearchFragment
 
@@ -37,9 +38,16 @@ class MainActivity : AppCompatActivity() {
 
                     true
                 }
+                R.id.navigationNews -> {
+                    loadFragment(NewsFragment.newInstance())
+
+                    true
+                }
                 else -> false
             }
         }
+
+//        binding.navView.isGone = true
     }
 
     private fun loadFragment(fragment: Fragment) {
