@@ -47,7 +47,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-//        binding.navView.isGone = true
     }
 
     private fun loadFragment(fragment: Fragment) {
@@ -58,5 +57,14 @@ class MainActivity : AppCompatActivity() {
                 fragment
             )
         }
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).edit().clear().apply()
+    }
+
+    companion object {
+        private const val SHARED_PREFS = "shared preferences"
     }
 }

@@ -8,7 +8,7 @@ import com.example.repo.model.FilterItem
 
 class FilterAdapter : RecyclerView.Adapter<FilterAdapter.FilterItemViewHolder>() {
     var filters = listOf<FilterItem>()
-    val selectedFilters = mutableListOf<String>()
+    var selectedFilters = mutableListOf<String>()
 
     class FilterItemViewHolder(val binding: FilterItemLayoutBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -28,10 +28,14 @@ class FilterAdapter : RecyclerView.Adapter<FilterAdapter.FilterItemViewHolder>()
 
         holder.binding.itemText.text = filter.name
 
+        holder.binding.switch1.isChecked = filter.check
+
         holder.binding.switch1.setOnCheckedChangeListener { _, isChecked ->
+            filter.check = isChecked
+
             if (isChecked) {
-                selectedFilters.add(filter.name)
-            } else {
+                filter.name?.let { selectedFilters.add(it) }
+            } else if (!isChecked) {
                 selectedFilters.remove(filter.name)
             }
         }
