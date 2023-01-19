@@ -48,7 +48,7 @@ class NewsAdapter : ListAdapter<News, NewsAdapter.NewsViewHolder>(DifferCallback
 
         holder.binding.newsCard.setOnClickListener {
             val bundle = bundleOf(
-                "NEWS_ITEM_KEY" to newsItem
+                NEWS_ITEM_KEY to newsItem
             )
             val fragment = DetailsFragment.newInstance()
             fragment.arguments = bundle
@@ -75,5 +75,9 @@ class NewsAdapter : ListAdapter<News, NewsAdapter.NewsViewHolder>(DifferCallback
             replace(R.id.screenContainer, fragment)
             addToBackStack("")
         }
+    }
+
+    companion object {
+        private const val NEWS_ITEM_KEY = "newsItemKey"
     }
 }

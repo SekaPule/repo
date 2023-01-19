@@ -28,7 +28,7 @@ class DetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val newsItem: News? = arguments?.getParcelable("NEWS_ITEM_KEY")
+        val newsItem: News? = arguments?.getParcelable(NEWS_ITEM_KEY)
 
         val today: LocalDate = Clock.System.todayIn(TimeZone.currentSystemDefault())
         val newsDate = newsItem!!.date?.toLocalDate()
@@ -71,6 +71,7 @@ class DetailsFragment : Fragment() {
 
     companion object {
         private const val TITLE_TEMPLATE = "Title"
+        private const val NEWS_ITEM_KEY = "newsItemKey"
 
         @JvmStatic
         fun newInstance() = DetailsFragment()

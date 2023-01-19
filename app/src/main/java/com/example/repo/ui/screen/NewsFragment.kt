@@ -64,10 +64,10 @@ class NewsFragment : Fragment() {
         }
 
         parentFragmentManager.setFragmentResultListener(
-            "filterResultKey",
+            FILTER_RESULT_KEY,
             requireActivity()
         ) { _, bundle ->
-            val filters: List<String> = bundle.getParcelableArrayList("filterBundleKey")!!
+            val filters: List<String> = bundle.getParcelableArrayList(FILTER_BUNDLE_KEY)!!
 
             if (filters.isNotEmpty()) {
                 val newsFiltered: List<News> = newsAdapter.currentList.filter { news ->
@@ -88,6 +88,9 @@ class NewsFragment : Fragment() {
     }
 
     companion object {
+        private const val FILTER_RESULT_KEY = "filterResultKey"
+        private const val FILTER_BUNDLE_KEY = "filterBundleKey"
+
         @JvmStatic
         fun newInstance() = NewsFragment()
     }
