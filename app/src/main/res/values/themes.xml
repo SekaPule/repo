@@ -214,12 +214,11 @@
     <style name="SwitchStyle">
         <item name="android:gravity">center</item>
         <item name="maxWidth">34dp</item>
-        <item name="thumbTint">@color/light_green</item>
-        <item name="trackTint">@color/light_green_translucent</item>
+        <item name="colorAccent">@color/light_green</item>
     </style>
 
     <style name="CircularProgress" parent="Theme.AppCompat.Light">
-        <item name="colorAccent">@color/turtle_green</item>
+        <item name="colorControlActivated">@color/turtle_green</item>
     </style>
 
     <style name="BottomNavigationViewStyle">
