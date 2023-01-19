@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import com.example.repo.databinding.ActivityMainBinding
 import com.example.repo.ui.screen.CategoriesOfHelpingFragment
+import com.example.repo.ui.screen.NewsFragment
 import com.example.repo.ui.screen.ProfileFragment
 import com.example.repo.ui.screen.SearchFragment
 import android.util.Log
@@ -40,9 +41,15 @@ class MainActivity : AppCompatActivity() {
 
                     true
                 }
+                R.id.navigationNews -> {
+                    loadFragment(NewsFragment.newInstance())
+
+                    true
+                }
                 else -> false
             }
         }
+
     }
 
     private fun loadFragment(fragment: Fragment) {
@@ -133,5 +140,14 @@ class MainActivity : AppCompatActivity() {
         user.doAction(Login(user), authCallback)
         user1.doAction(Login(user1), authCallback)
         user2.doAction(Logout(), authCallback)
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).edit().clear().apply()
+    }
+
+    companion object {
+        private const val SHARED_PREFS = "shared preferences"
     }
 }

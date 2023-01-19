@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/newsCard"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/newsImage"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/image_height"
+            android:layout_marginHorizontal="@dimen/spacing_xxs"
+            android:layout_marginTop="@dimen/spacing_xxs"
+            android:scaleType="centerCrop"
+            android:src="@drawable/news_item_image" />
+
+        <TextView
+            android:id="@+id/newsTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:lineSpacingExtra="10sp"
+            android:textAppearance="@style/TextStyle6"
+            tools:text="Спонсоры отремонтируют школу-интернат" />
+
+        <ImageView
+            android:layout_width="@dimen/news_logo_width"
+            android:layout_height="@dimen/news_logo_height"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/spacing_xs"
+            android:src="@drawable/ic_decor" />
+
+        <TextView
+            android:id="@+id/newsDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/description_margin"
+            android:layout_marginTop="@dimen/small_content_spacing"
+            android:gravity="center"
+            android:maxLines="3"
+            android:textAppearance="@style/TextStyle10"
+            tools:text="Дубовская школа-интернат для детей
+с ограниченными возможностями здоровья стала первой в области …" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_m"
+            android:background="@color/turtle_green"
+            android:gravity="center"
+            android:paddingTop="@dimen/date_top_spacing"
+            android:paddingBottom="@dimen/date_bot_spacing">
+
+            <TextView
+                android:id="@+id/newsDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textAppearance="@style/TextStyle20"
+                app:drawableStartCompat="@drawable/ic_calendar"
+                tools:text="Осталось 13 дней (21.09 – 20.10)" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

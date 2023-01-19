@@ -132,7 +132,7 @@
 
             <com.google.android.material.switchmaterial.SwitchMaterial
                 android:id="@+id/switch1"
-                style="@style/SwitchStyle"
+                android:theme="@style/SwitchStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/switch_spacer"

@@ -193,6 +193,13 @@
         <item name="android:textColor">@color/black_38</item>
     </style>
 
+    <style name="TextStyle20">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
     <style name="CustomTabTextAppearance" parent="TextAppearance.Design.Tab">
         <item name="android:gravity">center_horizontal</item>
         <item name="android:fontFamily">roboto-medium</item>
@@ -207,12 +214,11 @@
     <style name="SwitchStyle">
         <item name="android:gravity">center</item>
         <item name="maxWidth">34dp</item>
-        <item name="thumbTint">@color/light_green</item>
-        <item name="trackTint">@color/light_green_translucent</item>
+        <item name="colorAccent">@color/light_green</item>
     </style>
 
     <style name="CircularProgress" parent="Theme.AppCompat.Light">
-        <item name="colorAccent">@color/turtle_green</item>
+        <item name="colorControlActivated">@color/turtle_green</item>
     </style>
 
     <style name="BottomNavigationViewStyle">

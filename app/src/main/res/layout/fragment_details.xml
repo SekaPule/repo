@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".ui.screen.CategoriesOfHelpingFragment">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/appBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.appbar.MaterialToolbar
+                    android:id="@+id/toolBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/tool_bar_height"
+                    android:background="@color/light_green"
+                    app:menu="@menu/details_tool_bar_menu"
+                    app:titleTextAppearance="@style/TextStyle2"
+                    app:titleTextColor="@color/white" />
+
+            </com.google.android.material.appbar.AppBarLayout>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:layout_constraintGuide_begin="@dimen/spacing_l" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline2"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:layout_constraintGuide_end="@dimen/spacing_l" />
+
+            <TextView
+                android:id="@+id/detailsTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/spacing_m"
+                android:gravity="start|center"
+                android:lineSpacingExtra="10sp"
+                android:textAppearance="@style/TextStyle6"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/guideline"
+                app:layout_constraintTop_toBottomOf="@id/appBar"
+                tools:text="Спонсоры отремонтируют школу-интернат" />
+
+            <TextView
+                android:id="@+id/detailsDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/small_content_spacing"
+                android:drawablePadding="@dimen/icon_spacing_date"
+                android:gravity="center"
+                android:textAppearance="@style/TextStyle18"
+                app:drawableStartCompat="@drawable/ic_calendar_grey"
+                app:layout_constraintStart_toStartOf="@id/guideline"
+                app:layout_constraintTop_toBottomOf="@id/detailsTitle"
+                tools:text="Осталось 13 дней (21.09 – 20.10)" />
+
+            <TextView
+                android:id="@+id/detailsOrganization"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/small_content_spacing"
+                android:textAppearance="@style/TextStyle9"
+                app:layout_constraintStart_toStartOf="@id/guideline"
+                app:layout_constraintTop_toBottomOf="@id/detailsDate"
+                tools:text="Благотворительный Фонд «Счастливый Мир»" />
+
+            <TextView
+                android:id="@+id/detailsLocation"
+                android:layout_width="@dimen/location_width"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/mail_padding"
+                android:drawablePadding="@dimen/small_content_spacing"
+                android:textAppearance="@style/TextStyle10"
+                app:drawableStartCompat="@drawable/ic_location"
+                app:layout_constraintStart_toStartOf="@id/guideline"
+                app:layout_constraintTop_toBottomOf="@id/detailsOrganization"
+                tools:text="Санкт-Петербург, Кирочная улица, д. 50А, каб. 208" />
+
+            <ImageView
+                android:id="@+id/imagePhone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/small_content_spacing"
+                android:src="@drawable/ic_phone"
+                app:layout_constraintStart_toStartOf="@id/guideline"
+                app:layout_constraintTop_toBottomOf="@id/detailsLocation" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/phoneRV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/small_content_spacing"
+                app:layout_constraintStart_toEndOf="@id/imagePhone"
+                app:layout_constraintTop_toTopOf="@id/imagePhone" />
+
+            <TextView
+                android:id="@+id/detailsMail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/mail_padding"
+                android:drawablePadding="@dimen/small_content_spacing"
+                android:gravity="center"
+                android:text="@string/mail_label"
+                android:textAppearance="@style/TextStyle10"
+                app:drawableStartCompat="@drawable/ic_mail"
+                app:layout_constraintStart_toStartOf="@id/guideline"
+                app:layout_constraintTop_toBottomOf="@id/phoneRV" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/link_padding"
+                android:text="@string/mail_post_label"
+                android:textAppearance="@style/Link"
+                app:layout_constraintBottom_toBottomOf="@id/detailsMail"
+                app:layout_constraintStart_toEndOf="@id/detailsMail"
+                app:layout_constraintTop_toTopOf="@id/detailsMail" />
+
+            <ImageView
+                android:id="@+id/image1"
+                android:layout_width="@dimen/main_image_width"
+                android:layout_height="@dimen/main_image_height"
+                android:layout_marginTop="@dimen/spacing_m"
+                android:scaleType="centerCrop"
+                android:src="@drawable/news_item_image"
+                app:layout_constraintStart_toStartOf="@id/guideline"
+                app:layout_constraintTop_toBottomOf="@id/detailsMail" />
+
+            <ImageView
+                android:id="@+id/image2"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/images_height"
+                android:layout_marginStart="@dimen/small_content_spacing"
+                android:scaleType="centerCrop"
+                android:src="@drawable/cardimage_2"
+                app:layout_constraintEnd_toEndOf="@id/guideline2"
+                app:layout_constraintStart_toEndOf="@id/image1"
+                app:layout_constraintTop_toTopOf="@id/image1" />
+
+            <ImageView
+                android:id="@+id/image3"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/images_height"
+                android:layout_marginStart="@dimen/small_content_spacing"
+                android:layout_marginTop="@dimen/small_content_spacing"
+                android:scaleType="centerCrop"
+                android:src="@drawable/cardimage_3"
+                app:layout_constraintEnd_toEndOf="@id/guideline2"
+                app:layout_constraintStart_toEndOf="@id/image1"
+                app:layout_constraintTop_toBottomOf="@id/image2" />
+
+            <TextView
+                android:id="@+id/detailsDescription1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_l"
+                android:textAppearance="@style/TextStyle10"
+                app:layout_constraintEnd_toEndOf="@id/guideline2"
+                app:layout_constraintStart_toStartOf="@id/guideline"
+                app:layout_constraintTop_toBottomOf="@id/image1"
+                tools:text="Участники и болельщики смогли весело и активно провести время на «Петербургском благотворительном марафоне» и при этом финансово поучаствовать в помощи детям." />
+
+            <TextView
+                android:id="@+id/detailsDescription2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/small_content_spacing"
+                android:textAppearance="@style/TextStyle10"
+                app:layout_constraintEnd_toEndOf="@id/guideline2"
+                app:layout_constraintStart_toStartOf="@id/guideline"
+                app:layout_constraintTop_toBottomOf="@id/detailsDescription1"
+                tools:text="При этом финансово поучаствовать в помощи детям. При этом финансово поучаствовать в помощи детям." />
+
+            <TextView
+                android:id="@+id/goToLink"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_l"
+                android:text="@string/link_label"
+                android:textAppearance="@style/Link"
+                app:layout_constraintStart_toStartOf="@id/guideline"
+                app:layout_constraintTop_toBottomOf="@id/detailsDescription2" />
+
+            <View
+                android:id="@+id/footer"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/people_background_height"
+                android:layout_marginTop="@dimen/people_back_margin"
+                android:background="@color/light_grey_two"
+                app:layout_constraintTop_toBottomOf="@id/goToLink" />
+
+            <ImageView
+                android:id="@+id/avatar1"
+                android:layout_width="@dimen/people_icon_size"
+                android:layout_height="@dimen/people_icon_size"
+                android:src="@drawable/avatar_1"
+                app:layout_constraintBottom_toBottomOf="@id/footer"
+                app:layout_constraintStart_toStartOf="@id/guideline"
+                app:layout_constraintTop_toTopOf="@id/footer" />
+
+            <ImageView
+                android:id="@+id/avatar2"
+                android:layout_width="@dimen/people_icon_size"
+                android:layout_height="@dimen/people_icon_size"
+                android:src="@drawable/avatar_2"
+                app:layout_constraintBottom_toBottomOf="@id/footer"
+                app:layout_constraintStart_toEndOf="@id/avatar1"
+                app:layout_constraintTop_toTopOf="@id/footer" />
+
+            <ImageView
+                android:id="@+id/avatar3"
+                android:layout_width="@dimen/people_icon_size"
+                android:layout_height="@dimen/people_icon_size"
+                android:src="@drawable/avatar_3"
+                app:layout_constraintBottom_toBottomOf="@id/footer"
+                app:layout_constraintStart_toEndOf="@id/avatar2"
+                app:layout_constraintTop_toTopOf="@id/footer" />
+
+            <ImageView
+                android:id="@+id/avatar4"
+                android:layout_width="@dimen/people_icon_size"
+                android:layout_height="@dimen/people_icon_size"
+                android:src="@drawable/avatar_1"
+                app:layout_constraintBottom_toBottomOf="@id/footer"
+                app:layout_constraintStart_toEndOf="@id/avatar3"
+                app:layout_constraintTop_toTopOf="@id/footer" />
+
+            <ImageView
+                android:id="@+id/avatar5"
+                android:layout_width="@dimen/people_icon_size"
+                android:layout_height="@dimen/people_icon_size"
+                android:src="@drawable/avatar_2"
+                app:layout_constraintBottom_toBottomOf="@id/footer"
+                app:layout_constraintStart_toEndOf="@id/avatar4"
+                app:layout_constraintTop_toTopOf="@id/footer" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/small_content_spacing"
+                android:text="@string/quantity_template"
+                android:textAppearance="@style/TextStyle13"
+                app:layout_constraintBottom_toBottomOf="@id/avatar5"
+                app:layout_constraintStart_toEndOf="@id/avatar5"
+                app:layout_constraintTop_toTopOf="@id/avatar5" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/detailsNav"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/bottom_nav_height"
+        android:layout_gravity="bottom"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/details_bottom_menu" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
