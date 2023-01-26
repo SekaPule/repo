@@ -20,6 +20,14 @@ class DataProvider(private val context: Context) {
         return Gson().fromJson(jsonText, FilterList::class.java).filters
     }
 
+    fun getFilterItemsFromAssetsJson(): String =
+        context
+            .assets
+            .open(FILTER_ITEM_FILE_NAME)
+            .bufferedReader()
+            .use(BufferedReader::readText)
+
+
     fun getNewsFromAssets(): List<News> {
         val jsonText = context
             .assets
