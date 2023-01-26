@@ -1,6 +1,8 @@
 package com.example.repo.ui.screen
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +15,8 @@ import com.example.repo.databinding.FragmentNewsBinding
 import com.example.repo.model.News
 import com.example.repo.recycler.adapter.NewsAdapter
 import com.example.repo.recycler.utils.NewsMarginItemDecoration
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
 
 class NewsFragment : Fragment() {
@@ -33,11 +37,8 @@ class NewsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (newsList == null || newsList!!.isEmpty()) {
-            newsList = dataProvider.getNewsFromAssets() as MutableList<News>
-        }
-
-        newsAdapter.submitList(newsList)
+        val executor: ExecutorService = Executors.newSingleThreadExecutor()
+        val handler = Handler(Looper.getMainLooper())
 
         binding.newsRV.apply {
             layoutManager = LinearLayoutManager(requireContext())
@@ -47,6 +48,19 @@ class NewsFragment : Fragment() {
                     resources.getDimensionPixelSize(R.dimen.spacing_xs)
                 )
             )
+        }
+
+        if (newsList == null || newsList!!.isEmpty()) {
+            binding.progressBar.visibility = View.VISIBLE
+            executor.submit {
+                Thread.sleep(5000)
+                newsList = dataProvider.getNewsFromAssets() as MutableList<News>
+
+                handler.post {
+                    binding.progressBar.visibility = View.GONE
+                    newsAdapter.submitList(newsList)
+                }
+            }
         }
 
         binding.toolBar.title = resources.getString(R.string.news_title)
