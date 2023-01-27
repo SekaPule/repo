@@ -1,6 +1,7 @@
 package com.example.repo
 
 import android.os.Bundle
+import android.os.PersistableBundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
@@ -15,34 +16,41 @@ import java.math.BigDecimal
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    private var checked: Boolean = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.navView.menu.findItem((R.id.navigationHelp)).isChecked = true
-        loadFragment(CategoriesOfHelpingFragment.newInstance())
+        if (!checked) {
+            binding.navView.menu.findItem((R.id.navigationHelp)).isChecked = true
+            loadFragment(CategoriesOfHelpingFragment.newInstance())
+        }
 
         binding.navView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigationHelp -> {
                     loadFragment(CategoriesOfHelpingFragment.newInstance())
+                    checked = true
 
                     true
                 }
                 R.id.navigationAccount -> {
                     loadFragment(ProfileFragment.newInstance())
+                    checked = true
 
                     true
                 }
                 R.id.navigationSearch -> {
                     loadFragment(SearchFragment.newInstance())
+                    checked = true
 
                     true
                 }
                 R.id.navigationNews -> {
                     loadFragment(NewsFragment.newInstance())
+                    checked = true
 
                     true
                 }
@@ -50,6 +58,16 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
+        super.onSaveInstanceState(outState, outPersistentState)
+        outState.putBoolean(CHECKED_FLAG_KEY, checked)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        checked = savedInstanceState.getBoolean(CHECKED_FLAG_KEY, false)
     }
 
     private fun loadFragment(fragment: Fragment) {
@@ -142,12 +160,7 @@ class MainActivity : AppCompatActivity() {
         user2.doAction(Logout(), authCallback)
     }
 
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
-        getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).edit().clear().apply()
-    }
-
     companion object {
-        private const val SHARED_PREFS = "shared preferences"
+        private const val CHECKED_FLAG_KEY = "checkedFlagKey"
     }
 }

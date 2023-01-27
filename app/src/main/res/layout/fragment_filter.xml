@@ -5,11 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/light_grey_two"
+    android:fillViewport="true"
     tools:context=".ui.screen.CategoriesOfHelpingFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appBar"
@@ -52,6 +53,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/appBar" />
 
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="@dimen/progress_bar_size"
+            android:layout_height="@dimen/progress_bar_size"
+            android:theme="@style/CircularProgress"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider2" />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/one_dp_size"
@@ -69,6 +81,7 @@
             app:layout_constraintTop_toBottomOf="@id/choseCategoryLabel">
 
             <androidx.recyclerview.widget.RecyclerView
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 android:id="@+id/filterRV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -76,6 +89,7 @@
         </LinearLayout>
 
         <View
+            android:id="@+id/divider2"
             android:layout_width="match_parent"
             android:layout_height="@dimen/one_dp_size"
             android:background="@drawable/divider"
