@@ -66,6 +66,11 @@ subprojects {
 dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
 
+    //RxJava
+    implementation 'io.reactivex.rxjava3:rxjava:3.1.6'
+    implementation 'io.reactivex.rxjava3:rxandroid:3.0.2'
+    implementation 'com.jakewharton.rxbinding4:rxbinding:4.0.0'
+
     //Camera
     def camerax_version = "1.1.0-beta01"
     implementation "androidx.camera:camera-core:${camerax_version}"

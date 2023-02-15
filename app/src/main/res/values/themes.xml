@@ -241,4 +241,11 @@
         <item name="android:queryBackground">@android:color/transparent</item>
         <item name="hintTextAppearance">@style/CustomHint</item>
     </style>
+
+    <style name="CustomButton" parent="ThemeOverlay.AppCompat">
+        <item name="colorAccent">@color/grey</item>
+        <item name="textAllCaps">true</item>
+        <item name="android:textAppearance">@style/TextStyle17</item>
+    </style>
+
 </resources>
