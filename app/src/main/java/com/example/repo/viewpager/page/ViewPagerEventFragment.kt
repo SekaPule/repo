@@ -6,19 +6,29 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.repo.R
+import com.example.repo.data.DataProvider
 import com.example.repo.databinding.FragmentViewPagerEventBinding
-import com.example.repo.recycler.adapter.OrganizationAdapter
-import java.util.*
+import com.example.repo.model.News
+import com.example.repo.recycler.adapter.EventAdapter
+import com.example.repo.ui.vm.SearchViewModel
 
 class ViewPagerEventFragment : Fragment() {
     private lateinit var binding: FragmentViewPagerEventBinding
+    private val sharedViewModel: SearchViewModel by activityViewModels()
+    private lateinit var dataProvider: DataProvider
+    private val eventAdapter by lazy { EventAdapter() }
+    private var eventList: MutableList<News>? = null
+    private var filteredEventList: MutableList<News>? = mutableListOf()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        dataProvider = DataProvider(requireContext())
         binding = FragmentViewPagerEventBinding.inflate(inflater)
         return binding.root
     }
@@ -28,50 +38,36 @@ class ViewPagerEventFragment : Fragment() {
 
         binding.eventRV.apply {
             layoutManager = LinearLayoutManager(requireContext())
-            adapter = OrganizationAdapter().apply {
-                organizations = getRandomStrings()
-            }
+            adapter = eventAdapter
 
             val itemDecorator = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
             itemDecorator.setDrawable(ContextCompat.getDrawable(context, R.drawable.divider)!!)
             addItemDecoration(itemDecorator)
         }
 
-    }
+        if (eventList == null) {
+            eventList = dataProvider.getNewsFromAssets() as MutableList<News>
+            eventAdapter.submitList(filteredEventList)
+        }
 
-    override fun onPause() {
-        super.onPause()
-        binding.eventRV.apply {
-            adapter = OrganizationAdapter().apply {
-                organizations = getRandomStrings()
+        sharedViewModel.searchText.observe(requireActivity()) { search ->
+            if (eventList != null) {
+                filteredEventList = eventList!!.filter { event ->
+                    event.title!!.lowercase().contains(search)
+                } as MutableList<News>?
+
+                eventAdapter.submitList(filteredEventList)
             }
         }
     }
 
-    private fun getRandomString(): String {
-        val random = Random()
-        val bound = (LEFT_BORDER..RIGHT_BORDER).random()
-        val sb = StringBuilder(bound)
-        for (i in 0 until bound)
-            sb.append(ALLOWED_CHARACTERS[random.nextInt(ALLOWED_CHARACTERS.length)])
-        return sb.toString()
-    }
+    override fun onResume() {
+        super.onResume()
 
-    private fun getRandomStrings(): List<String> {
-        val bound = (LEFT_BORDER..RIGHT_BORDER).random()
-        val result = mutableListOf<String>()
-        for (i in 0 until bound) {
-            result.add(getRandomString())
-        }
-
-        return result
+        eventAdapter.submitList(filteredEventList)
     }
 
     companion object {
-        private const val LEFT_BORDER = 5
-        private const val RIGHT_BORDER = 42
-        private const val ALLOWED_CHARACTERS = "0123456789qwertyuiopasdfghjklzxcvbnm"
-
         @JvmStatic
         fun newInstance() = ViewPagerEventFragment()
     }
