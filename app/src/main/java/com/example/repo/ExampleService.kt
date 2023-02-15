@@ -2,7 +2,9 @@ package com.example.repo
 
 import android.app.IntentService
 import android.content.Intent
+import android.util.Log
 import com.example.repo.data.DataProvider
+import io.reactivex.rxjava3.core.Single
 
 
 class ExampleService : IntentService(EXAMPLE_SERVICE_NAME) {
@@ -11,18 +13,24 @@ class ExampleService : IntentService(EXAMPLE_SERVICE_NAME) {
 
     @Deprecated("Deprecated in Java")
     override fun onHandleIntent(intent: Intent?) {
-        Thread.sleep(5000)
-        try {
-            filters = dataProvider.getFilterItemsFromAssetsJson()
-        } catch (e: InterruptedException) {
-            e.printStackTrace()
+
+        val newsListJsonReactive = Single.create { emitter ->
+            Log.e("BTHREAD1", Thread.currentThread().name)
+            emitter.onSuccess(dataProvider.getFilterItemsFromAssetsJson())
         }
 
-        Intent().also {
-            it.action = ACTION_MY_INTENT_SERVICE
-            it.putExtra(EXTRA_KEY_OUT, filters)
-            sendBroadcast(it)
-        }
+        newsListJsonReactive
+            .subscribe({ json ->
+                Log.e("BTHREAD2", Thread.currentThread().name)
+                Intent().also {
+                    it.action = ACTION_MY_INTENT_SERVICE
+                    it.putExtra(EXTRA_KEY_OUT, json)
+                    sendBroadcast(it)
+                }
+            }, { error ->
+                Log.e("TAG", "$error")
+            })
+
     }
 
     companion object {

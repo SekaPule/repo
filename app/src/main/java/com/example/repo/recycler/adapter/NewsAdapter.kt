@@ -2,6 +2,7 @@ package com.example.repo.recycler.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
@@ -46,7 +47,14 @@ class NewsAdapter : ListAdapter<News, NewsAdapter.NewsViewHolder>(DifferCallback
         holder.binding.newsDescription.text = newsItem.titleDescription
         holder.binding.newsTitle.text = newsItem.title
 
+        if (newsItem.isChecked) {
+            holder.binding.isNotCheckedLabel.visibility = View.GONE
+        } else {
+            holder.binding.isNotCheckedLabel.visibility = View.VISIBLE
+        }
+
         holder.binding.newsCard.setOnClickListener {
+            newsItem.isChecked = true
             val bundle = bundleOf(
                 NEWS_ITEM_KEY to newsItem
             )
