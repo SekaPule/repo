@@ -12,11 +12,13 @@ import com.example.repo.R
 import com.example.repo.databinding.FragmentAuthBinding
 import com.jakewharton.rxbinding4.widget.textChangeEvents
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.disposables.Disposable
 
 
 class AuthFragment : Fragment() {
     private lateinit var binding: FragmentAuthBinding
     private lateinit var observable: Observable<Boolean>
+    private lateinit var disposable: Disposable
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,7 +34,7 @@ class AuthFragment : Fragment() {
         binding.toolBar.title = getString(R.string.auth_title)
         binding.toolBar.setNavigationIcon(R.drawable.ic_arrow_back)
         binding.toolBar.setNavigationOnClickListener {
-            parentFragmentManager.popBackStack()
+            requireActivity().finish()
         }
 
         binding.authBtn.setOnClickListener {
@@ -61,19 +63,20 @@ class AuthFragment : Fragment() {
             isValidForm(s1, s2)
         }
 
-        observable.subscribe({
+        disposable = observable.subscribe({
             updateButton(it)
         }, {
             it.localizedMessage?.let { it1 -> Log.e("Error", it1) }
         })
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable.dispose()
+    }
+
     private fun isValidForm(email: String, password: String): Boolean {
-        Log.e("TAGG", "$email - $password")
-        if (email.length > 5 && password.length > 5) {
-            return true
-        }
-        return false
+        return email.length > 5 && password.length > 5
     }
 
     private fun updateButton(valid: Boolean) {
