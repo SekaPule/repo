@@ -18,9 +18,8 @@ import com.example.repo.recycler.utils.NewsMarginItemDecoration
 import com.example.repo.ui.vm.NewsViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 
 
 class NewsFragment : Fragment() {
@@ -29,6 +28,7 @@ class NewsFragment : Fragment() {
     private val newsAdapter by lazy { NewsAdapter() }
     private var newsList: MutableList<News>? = null
     private val newsViewModel: NewsViewModel by activityViewModels()
+    private lateinit var disposable: Disposable
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,8 +41,6 @@ class NewsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val executor: ExecutorService = Executors.newSingleThreadExecutor()
 
         binding.newsRV.apply {
             layoutManager = LinearLayoutManager(requireContext())
@@ -60,20 +58,20 @@ class NewsFragment : Fragment() {
             val newsListReactive = Single.create { emitter ->
                 emitter.onSuccess(dataProvider.getNewsFromAssets() as MutableList<News>)
                 Log.e("THREAD1", Thread.currentThread().name)
-            }
-
-            newsListReactive
-                .subscribeOn(Schedulers.from(executor))
+            }.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ news ->
-                    Log.e("THREAD2", Thread.currentThread().name)
-                    binding.progressBar.visibility = View.GONE
-                    newsList = news
-                    newsViewModel.setNews(news)
-                    newsAdapter.submitList(news)
-                }, { error ->
-                    Log.e("TAG", "$error")
-                })
+
+
+
+            disposable = newsListReactive.subscribe({ news ->
+                Log.e("THREAD2", Thread.currentThread().name)
+                binding.progressBar.visibility = View.GONE
+                newsList = news
+                newsViewModel.setNews(news)
+                newsAdapter.submitList(news)
+            }, { error ->
+                Log.e("TAG", "$error")
+            })
         }
 
         binding.toolBar.title = resources.getString(R.string.news_title)
@@ -114,6 +112,11 @@ class NewsFragment : Fragment() {
 
         newsViewModel.setNews(newsList)
         newsAdapter.submitList(newsList)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable.dispose()
     }
 
     companion object {
