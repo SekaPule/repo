@@ -15,6 +15,7 @@ import com.example.repo.databinding.FragmentViewPagerEventBinding
 import com.example.repo.model.News
 import com.example.repo.recycler.adapter.EventAdapter
 import com.example.repo.ui.vm.SearchViewModel
+import kotlin.concurrent.thread
 
 class ViewPagerEventFragment : Fragment() {
     private lateinit var binding: FragmentViewPagerEventBinding
@@ -46,7 +47,9 @@ class ViewPagerEventFragment : Fragment() {
         }
 
         if (eventList == null) {
-            eventList = dataProvider.getNewsFromAssets() as MutableList<News>
+            thread {
+                eventList = dataProvider.getNewsFromAssets() as MutableList<News>
+            }
             eventAdapter.submitList(filteredEventList)
         }
 

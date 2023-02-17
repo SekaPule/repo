@@ -15,6 +15,7 @@ import com.example.repo.databinding.FragmentViewPagerNKOBinding
 import com.example.repo.model.News
 import com.example.repo.recycler.adapter.OrganizationAdapter
 import com.example.repo.ui.vm.SearchViewModel
+import kotlin.concurrent.thread
 
 
 class ViewPagerNKOFragment : Fragment() {
@@ -47,7 +48,9 @@ class ViewPagerNKOFragment : Fragment() {
         }
 
         if (organizationList == null) {
-            organizationList = dataProvider.getNewsFromAssets() as MutableList<News>
+            thread {
+                organizationList = dataProvider.getNewsFromAssets() as MutableList<News>
+            }
             organizationAdapter.submitList(filteredOrganizationList)
         }
 
