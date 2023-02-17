@@ -2,10 +2,10 @@ package com.example.repo.recycler.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
@@ -47,11 +47,7 @@ class NewsAdapter : ListAdapter<News, NewsAdapter.NewsViewHolder>(DifferCallback
         holder.binding.newsDescription.text = newsItem.titleDescription
         holder.binding.newsTitle.text = newsItem.title
 
-        if (newsItem.isChecked) {
-            holder.binding.isNotCheckedLabel.visibility = View.GONE
-        } else {
-            holder.binding.isNotCheckedLabel.visibility = View.VISIBLE
-        }
+        holder.binding.isNotCheckedLabel.isVisible = !newsItem.isChecked
 
         holder.binding.newsCard.setOnClickListener {
             newsItem.isChecked = true
