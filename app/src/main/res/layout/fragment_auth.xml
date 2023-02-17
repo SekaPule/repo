@@ -6,7 +6,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/spacing_l">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appBar"
@@ -197,14 +198,6 @@
             android:textAppearance="@style/Link"
             app:layout_constraintEnd_toEndOf="@id/guideline2"
             app:layout_constraintTop_toBottomOf="@id/authBtn" />
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="@dimen/spacing_l"
-            app:layout_constraintEnd_toEndOf="@id/guideline2"
-            app:layout_constraintStart_toStartOf="@id/guideline"
-            app:layout_constraintTop_toBottomOf="@id/forgotPasswordBtn" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
