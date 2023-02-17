@@ -13,6 +13,8 @@ import com.example.repo.databinding.ActivityMainBinding
 import com.example.repo.model.News
 import com.example.repo.ui.screen.*
 import com.example.repo.ui.vm.NewsViewModel
+import io.reactivex.rxjava3.disposables.Disposable
+import kotlin.concurrent.thread
 
 
 class MainActivity : AppCompatActivity() {
@@ -20,6 +22,7 @@ class MainActivity : AppCompatActivity() {
     private var checked: Boolean = false
     private val newsViewModel: NewsViewModel by viewModels()
     private val dataProvider = DataProvider(this)
+    private var disposable: Disposable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +35,7 @@ class MainActivity : AppCompatActivity() {
             backgroundColor = getColor(R.color.macaroni_and_cheese)
         }
 
-        newsViewModel.news?.subscribe(
+        disposable = newsViewModel.news?.subscribe(
             { news ->
                 val countNotChecked = news.count { !it.isChecked }
                 badge.number = countNotChecked
@@ -43,7 +46,9 @@ class MainActivity : AppCompatActivity() {
             }
         )
 
-        newsViewModel.setNews(dataProvider.getNewsFromAssets() as MutableList<News>)
+        thread {
+            newsViewModel.setNews(dataProvider.getNewsFromAssets() as MutableList<News>)
+        }
 
         supportFragmentManager.setFragmentResultListener(AUTH_KEY, this) { _, bundle ->
             checked = bundle.getBoolean(AUTH_BUNDLE_KEY)
@@ -90,6 +95,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable?.dispose()
     }
 
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
