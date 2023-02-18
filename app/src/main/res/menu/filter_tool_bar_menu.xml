@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/navigationConfirm"
-        android:icon="@drawable/ic_ok"
+        android:icon="@drawable/ic_accept"
         android:title=""
         app:showAsAction="always" />
 </menu>

@@ -1,12 +1,12 @@
 package com.example.repo.ui.screen
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.commit
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.repo.R
@@ -15,8 +15,11 @@ import com.example.repo.databinding.FragmentNewsBinding
 import com.example.repo.model.News
 import com.example.repo.recycler.adapter.NewsAdapter
 import com.example.repo.recycler.utils.NewsMarginItemDecoration
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
+import com.example.repo.ui.vm.NewsViewModel
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 
 class NewsFragment : Fragment() {
@@ -24,6 +27,8 @@ class NewsFragment : Fragment() {
     private lateinit var dataProvider: DataProvider
     private val newsAdapter by lazy { NewsAdapter() }
     private var newsList: MutableList<News>? = null
+    private val newsViewModel: NewsViewModel by activityViewModels()
+    private lateinit var disposable: Disposable
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,9 +42,6 @@ class NewsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val executor: ExecutorService = Executors.newSingleThreadExecutor()
-        val handler = Handler(Looper.getMainLooper())
-
         binding.newsRV.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = newsAdapter
@@ -52,15 +54,24 @@ class NewsFragment : Fragment() {
 
         if (newsList == null || newsList!!.isEmpty()) {
             binding.progressBar.visibility = View.VISIBLE
-            executor.submit {
-                Thread.sleep(5000)
-                newsList = dataProvider.getNewsFromAssets() as MutableList<News>
 
-                handler.post {
-                    binding.progressBar.visibility = View.GONE
-                    newsAdapter.submitList(newsList)
-                }
-            }
+            val newsListReactive = Single.create { emitter ->
+                emitter.onSuccess(dataProvider.getNewsFromAssets() as MutableList<News>)
+                Log.e("THREAD1", Thread.currentThread().name)
+            }.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+
+
+
+            disposable = newsListReactive.subscribe({ news ->
+                Log.e("THREAD2", Thread.currentThread().name)
+                binding.progressBar.visibility = View.GONE
+                newsList = news
+                newsViewModel.setNews(news)
+                newsAdapter.submitList(news)
+            }, { error ->
+                Log.e("TAG", "$error")
+            })
         }
 
         binding.toolBar.title = resources.getString(R.string.news_title)
@@ -91,6 +102,7 @@ class NewsFragment : Fragment() {
                 }
 
                 newsList = newsFiltered as MutableList<News>
+                newsViewModel.setNews(newsList)
             }
         }
     }
@@ -98,7 +110,13 @@ class NewsFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
+        newsViewModel.setNews(newsList)
         newsAdapter.submitList(newsList)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable.dispose()
     }
 
     companion object {

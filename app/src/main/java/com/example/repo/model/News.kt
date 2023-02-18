@@ -14,7 +14,8 @@ data class News(
     val titleDescription: String?,
     val description: String?,
     val subDescription: String?,
-) : Parcelable {
+    var isChecked: Boolean = false,
+) :Parcelable{
     constructor(parcel: Parcel) : this(
         parcel.readInt(),
         parcel.createStringArrayList(),
@@ -25,7 +26,8 @@ data class News(
         parcel.createStringArrayList(),
         parcel.readString(),
         parcel.readString(),
-        parcel.readString()
+        parcel.readString(),
+        parcel.readByte() != 0.toByte()
     ) {
     }
 
@@ -40,6 +42,7 @@ data class News(
         parcel.writeString(titleDescription)
         parcel.writeString(description)
         parcel.writeString(subDescription)
+        parcel.writeByte(if (isChecked) 1 else 0)
     }
 
     override fun describeContents(): Int {

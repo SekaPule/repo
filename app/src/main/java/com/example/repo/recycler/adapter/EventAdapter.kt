@@ -8,15 +8,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.repo.databinding.OrganizationLayoutBinding
 import com.example.repo.model.News
 
-class OrganizationAdapter : ListAdapter<News, OrganizationAdapter.OrganizationViewHolder>(
-    DifferCallback
+class EventAdapter : ListAdapter<News, EventAdapter.EventViewHolder>(
+    EventDifferCallback
 ) {
 
-    class OrganizationViewHolder(val binding: OrganizationLayoutBinding) :
+    class EventViewHolder(val binding: OrganizationLayoutBinding) :
         RecyclerView.ViewHolder(binding.root)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OrganizationViewHolder {
-        return OrganizationViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder {
+        return EventViewHolder(
             OrganizationLayoutBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
@@ -25,14 +25,14 @@ class OrganizationAdapter : ListAdapter<News, OrganizationAdapter.OrganizationVi
         )
     }
 
-    override fun onBindViewHolder(holder: OrganizationViewHolder, position: Int) {
-        val organization = getItem(position)
+    override fun onBindViewHolder(holder: EventViewHolder, position: Int) {
+        val event = getItem(position)
 
-        holder.binding.orgText.text = organization.organization
+        holder.binding.orgText.text = event.title
 
     }
 
-    object DifferCallback : DiffUtil.ItemCallback<News>() {
+    object EventDifferCallback : DiffUtil.ItemCallback<News>() {
         override fun areItemsTheSame(oldItem: News, newItem: News): Boolean {
             return oldItem.id == newItem.id
         }

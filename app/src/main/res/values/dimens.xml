@@ -52,4 +52,13 @@
     <dimen name="mail_padding">14dp</dimen>
     <dimen name="location_width">260dp</dimen>
     <dimen name="filter_margin">17dp</dimen>
+    <dimen name="auth_invite_margin">55dp</dimen>
+    <dimen name="auth_invite_margin_top">40dp</dimen>
+    <dimen name="social_media_ic_size">40dp</dimen>
+    <dimen name="auth_btn_height">44dp</dimen>
+    <dimen name="auth_btn_top_margin">26dp</dimen>
+    <dimen name="invite_example_margin_top">10dp</dimen>
+    <dimen name="invite_margin_top">38dp</dimen>
+    <dimen name="invite_text_width">250dp</dimen>
+    <dimen name="search_image_size">188dp</dimen>
 </resources>

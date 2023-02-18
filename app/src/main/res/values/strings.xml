@@ -43,4 +43,17 @@
     <string name="become_vol">Стать волонтером</string>
     <string name="prof_hellp">Проф помощь</string>
     <string name="help_money">Помочь деньгами</string>
+    <string name="auth_title">Авторизация</string>
+    <string name="auth_invite_text">Для участия в мероприятиях войдите в приложение через социальые сети</string>
+    <string name="auth_invite_text2">Или авторизуйтесь через приложение</string>
+    <string name="email_label">E-mail</string>
+    <string name="email_edit_text_hint">Введите e-mail</string>
+    <string name="password_label">Пароль</string>
+    <string name="password_edit_text_hint">Введите пароль</string>
+    <string name="auth_btn_text">войти</string>
+    <string name="forgot_password_btn_text">Забыли пароль?</string>
+    <string name="register_btn_text">Регистрация</string>
+    <string name="invite_to_search_text">Напишите в строке поиска название мероприятия или ключевые слова.</string>
+    <string name="invite_to_search_example_label">Например,</string>
+    <string name="invite_to_search_example">мастер-класс, помощь</string>
 </resources>
