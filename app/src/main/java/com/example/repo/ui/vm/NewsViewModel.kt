@@ -1,17 +1,27 @@
 package com.example.repo.ui.vm
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.repo.model.News
-import io.reactivex.rxjava3.subjects.PublishSubject
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 class NewsViewModel : ViewModel() {
-    private val _news = PublishSubject.create<MutableList<News>?>()
-    val news: PublishSubject<MutableList<News>>?
+    private val _news = MutableStateFlow(mutableListOf<News>())
+    val news: StateFlow<MutableList<News>>
         get() = _news
 
     fun setNews(news: MutableList<News>?) {
         news?.let {
-            _news.onNext(it)
+            viewModelScope.launch {
+                try {
+                    _news.emit(it)
+                }catch (e: Error){
+                    e.localizedMessage?.let { Log.e("TAG", it) }
+                }
+            }
         }
     }
 }
