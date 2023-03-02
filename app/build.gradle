@@ -71,6 +71,14 @@ dependencies {
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.2'
     implementation 'com.jakewharton.rxbinding4:rxbinding:4.0.0'
 
+    //Coroutine
+    def flow_binding_version = "1.2.0"
+    def coroutine_version = "1.6.4"
+
+    implementation "io.github.reactivecircus.flowbinding:flowbinding-android:${flow_binding_version}"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:${coroutine_version}"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:${coroutine_version}"
+
     //Camera
     def camerax_version = "1.1.0-beta01"
     implementation "androidx.camera:camera-core:${camerax_version}"
