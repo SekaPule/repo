@@ -8,13 +8,12 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
+import androidx.lifecycle.lifecycleScope
 import com.example.repo.data.DataProvider
 import com.example.repo.databinding.ActivityMainBinding
 import com.example.repo.model.News
 import com.example.repo.ui.screen.*
 import com.example.repo.ui.vm.NewsViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.concurrent.thread
 
@@ -36,20 +35,21 @@ class MainActivity : AppCompatActivity() {
             backgroundColor = getColor(R.color.macaroni_and_cheese)
         }
 
-        CoroutineScope(Dispatchers.Main).launch {
+        lifecycleScope.launch {
             try {
-                newsViewModel.news.collect { news ->
-                    val countNotChecked = news.count { !it.isChecked }
+                newsViewModel.notCheckedNewsCounter.collect { countNotChecked ->
                     badge.number = countNotChecked
                     badge.isVisible = countNotChecked > 0
                 }
-            }catch (e: Error){
+            }catch (e: Throwable){
                 e.localizedMessage?.let { Log.e("TAG", it) }
             }
         }
 
         thread {
-            newsViewModel.setNews(dataProvider.getNewsFromAssets() as MutableList<News>)
+            val news = dataProvider.getNewsFromAssets() as MutableList<News>
+            newsViewModel.setNews(news)
+            newsViewModel.setNotCheckedNewsCounter(news.count { !it.isChecked })
         }
 
         supportFragmentManager.setFragmentResultListener(AUTH_KEY, this) { _, bundle ->
