@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.commit
+import androidx.lifecycle.lifecycleScope
 import com.example.repo.R
 import com.example.repo.databinding.FragmentSearchBinding
 import com.example.repo.ui.fragments.ViewPagerContainerFragment
@@ -15,8 +16,6 @@ import com.example.repo.ui.fragments.ViewPagerNoEventFragment
 import com.example.repo.ui.vm.SearchViewModel
 import com.example.repo.viewpager.adapter.PagerAdapter
 import com.google.android.material.tabs.TabLayoutMediator
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.debounce
@@ -52,7 +51,7 @@ class SearchFragment : Fragment() {
             }
         }.attach()
 
-        CoroutineScope(Dispatchers.Main).launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             val queryFlow = binding.searchView.queryTextChanges()
                 .debounce(SEARCH_TIMEOUT_MILLISECONDS)
                 .map { text -> text.toString().lowercase().trim() }
