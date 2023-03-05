@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.commit
+import androidx.lifecycle.lifecycleScope
 import com.example.repo.R
 import com.example.repo.databinding.FragmentSearchBinding
 import com.example.repo.ui.fragments.ViewPagerContainerFragment
@@ -15,16 +16,18 @@ import com.example.repo.ui.fragments.ViewPagerNoEventFragment
 import com.example.repo.ui.vm.SearchViewModel
 import com.example.repo.viewpager.adapter.PagerAdapter
 import com.google.android.material.tabs.TabLayoutMediator
-import com.jakewharton.rxbinding4.widget.queryTextChanges
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.disposables.Disposable
-import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
+import reactivecircus.flowbinding.android.widget.queryTextChanges
 
 
 class SearchFragment : Fragment() {
     private lateinit var binding: FragmentSearchBinding
     private val sharedViewModel: SearchViewModel by activityViewModels()
-    private lateinit var disposable: Disposable
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,6 +37,7 @@ class SearchFragment : Fragment() {
         return binding.root
     }
 
+    @OptIn(FlowPreview::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -47,14 +51,16 @@ class SearchFragment : Fragment() {
             }
         }.attach()
 
-        val observable = binding.searchView.queryTextChanges()
-            .debounce(SEARCH_TIMEOUT_MILLISECONDS, TimeUnit.MILLISECONDS)
-            .map { text -> text.toString().lowercase().trim() }
-            .distinctUntilChanged()
-            .observeOn(AndroidSchedulers.mainThread())
+        viewLifecycleOwner.lifecycleScope.launch {
+            val queryFlow = binding.searchView.queryTextChanges()
+                .debounce(SEARCH_TIMEOUT_MILLISECONDS)
+                .map { text -> text.toString().lowercase().trim() }
+                .distinctUntilChanged()
+                .catch { e ->
+                    e.localizedMessage?.let { Log.e("TAG", it) }
+                }
 
-        disposable = observable.subscribe(
-            { text ->
+            queryFlow.collect { text ->
                 sharedViewModel.setSearchText(text = text)
                 if (text.isBlank()) {
                     binding.pager.visibility = View.GONE
@@ -73,10 +79,8 @@ class SearchFragment : Fragment() {
                         )
                     }
                 }
-            },
-            {
-                Log.e("TAG", "$it")
-            })
+            }
+        }
 
         binding.searchView.setQuery(sharedViewModel.searchText.value, false)
 
@@ -98,11 +102,6 @@ class SearchFragment : Fragment() {
             }
         }
 
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        disposable.dispose()
     }
 
     companion object {

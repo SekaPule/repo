@@ -8,12 +8,13 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
+import androidx.lifecycle.lifecycleScope
 import com.example.repo.data.DataProvider
 import com.example.repo.databinding.ActivityMainBinding
 import com.example.repo.model.News
 import com.example.repo.ui.screen.*
 import com.example.repo.ui.vm.NewsViewModel
-import io.reactivex.rxjava3.disposables.Disposable
+import kotlinx.coroutines.launch
 import kotlin.concurrent.thread
 
 
@@ -22,7 +23,6 @@ class MainActivity : AppCompatActivity() {
     private var checked: Boolean = false
     private val newsViewModel: NewsViewModel by viewModels()
     private val dataProvider = DataProvider(this)
-    private var disposable: Disposable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,19 +36,21 @@ class MainActivity : AppCompatActivity() {
             backgroundColor = getColor(R.color.macaroni_and_cheese)
         }
 
-        disposable = newsViewModel.news?.subscribe(
-            { news ->
-                val countNotChecked = news.count { !it.isChecked }
-                badge.number = countNotChecked
-                badge.isVisible = countNotChecked > 0
-            },
-            { error ->
-                error.localizedMessage?.let { Log.e("TAG", it) }
+        lifecycleScope.launch {
+            try {
+                newsViewModel.notCheckedNewsCounter.collect { countNotChecked ->
+                    badge.number = countNotChecked
+                    badge.isVisible = countNotChecked > 0
+                }
+            }catch (e: Throwable){
+                e.localizedMessage?.let { Log.e("TAG", it) }
             }
-        )
+        }
 
         thread {
-            newsViewModel.setNews(dataProvider.getNewsFromAssets() as MutableList<News>)
+            val news = dataProvider.getNewsFromAssets() as MutableList<News>
+            newsViewModel.setNews(news)
+            newsViewModel.setNotCheckedNewsCounter(news.count { !it.isChecked })
         }
 
         supportFragmentManager.setFragmentResultListener(AUTH_KEY, this) { _, bundle ->
@@ -96,11 +98,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        disposable?.dispose()
     }
 
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {

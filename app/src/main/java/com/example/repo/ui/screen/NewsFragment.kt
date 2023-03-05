@@ -68,6 +68,7 @@ class NewsFragment : Fragment() {
                 binding.progressBar.visibility = View.GONE
                 newsList = news
                 newsViewModel.setNews(news)
+                newsViewModel.setNotCheckedNewsCounter(news.count { !it.isChecked })
                 newsAdapter.submitList(news)
             }, { error ->
                 Log.e("TAG", "$error")
@@ -102,7 +103,8 @@ class NewsFragment : Fragment() {
                 }
 
                 newsList = newsFiltered as MutableList<News>
-                newsViewModel.setNews(newsList)
+                newsViewModel.setNews(newsList!!)
+                newsViewModel.setNotCheckedNewsCounter(newsList!!.count { !it.isChecked })
             }
         }
     }
@@ -110,7 +112,10 @@ class NewsFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        newsViewModel.setNews(newsList)
+        newsList?.let { newsViewModel.setNews(it) }
+        newsList?.let { list ->
+            newsViewModel.setNotCheckedNewsCounter(list.count { !it.isChecked })
+        }
         newsAdapter.submitList(newsList)
     }
 
