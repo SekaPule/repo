@@ -6,6 +6,10 @@ import android.util.Log
 import com.example.repo.data.DataProvider
 import com.example.repo.data.internet.retrofit.RetrofitClient
 import com.example.repo.data.repository.Repository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.launch
 
 
 class ExampleService : IntentService(EXAMPLE_SERVICE_NAME) {
@@ -17,19 +21,20 @@ class ExampleService : IntentService(EXAMPLE_SERVICE_NAME) {
     @Deprecated("Deprecated in Java")
     override fun onHandleIntent(intent: Intent?) {
 
-        val newsListJsonReactive = repository.getFilters()
+        val newsListJsonFlow = repository.getFilters()
 
-        newsListJsonReactive
-            .subscribe({ json ->
-                Log.e("BTHREAD2", Thread.currentThread().name)
-                Intent().also {
-                    it.action = ACTION_MY_INTENT_SERVICE
-                    it.putExtra(EXTRA_KEY_OUT, json)
-                    sendBroadcast(it)
+        CoroutineScope(Dispatchers.IO).launch {
+            newsListJsonFlow
+                .flowOn(Dispatchers.IO)
+                .collect { json ->
+                    Log.e("BTHREAD2", Thread.currentThread().name)
+                    Intent().also {
+                        it.action = ACTION_MY_INTENT_SERVICE
+                        it.putExtra(EXTRA_KEY_OUT, json)
+                        sendBroadcast(it)
+                    }
                 }
-            }, { error ->
-                Log.e("TAG", "$error")
-            })
+        }
 
     }
 

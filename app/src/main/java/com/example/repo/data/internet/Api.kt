@@ -1,13 +1,13 @@
 package com.example.repo.data.internet
 
 import com.example.repo.model.NewsList
-import io.reactivex.rxjava3.core.Single
+import kotlinx.coroutines.flow.Flow
 import retrofit2.http.GET
 
 interface Api {
     @GET("/news")
-    fun getNewsFromServer(): Single<NewsList>
+    fun getNewsFromServer(): Flow<NewsList>
 
     @GET("/categories")
-    fun getFiltersFromServer(): Single<String>
+    fun getFiltersFromServer(): Flow<String>
 }
