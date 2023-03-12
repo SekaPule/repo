@@ -4,20 +4,20 @@ import android.app.IntentService
 import android.content.Intent
 import android.util.Log
 import com.example.repo.data.DataProvider
-import io.reactivex.rxjava3.core.Single
+import com.example.repo.data.internet.retrofit.RetrofitClient
+import com.example.repo.data.repository.Repository
 
 
 class ExampleService : IntentService(EXAMPLE_SERVICE_NAME) {
     private val dataProvider = DataProvider(this)
+    private val api = RetrofitClient.configureRetrofit()
+    private val repository = Repository(api = api, dataProvider = dataProvider)
     private lateinit var filters: String
 
     @Deprecated("Deprecated in Java")
     override fun onHandleIntent(intent: Intent?) {
 
-        val newsListJsonReactive = Single.create { emitter ->
-            Log.e("BTHREAD1", Thread.currentThread().name)
-            emitter.onSuccess(dataProvider.getFilterItemsFromAssetsJson())
-        }
+        val newsListJsonReactive = repository.getFilters()
 
         newsListJsonReactive
             .subscribe({ json ->
