@@ -17,9 +17,7 @@ class ExampleService : IntentService(EXAMPLE_SERVICE_NAME) {
     @Deprecated("Deprecated in Java")
     override fun onHandleIntent(intent: Intent?) {
 
-        val newsListJsonReactive = repository.getFilters()
-
-        newsListJsonReactive
+        repository.getFilters()
             .subscribe({ json ->
                 Log.e("BTHREAD2", Thread.currentThread().name)
                 Intent().also {

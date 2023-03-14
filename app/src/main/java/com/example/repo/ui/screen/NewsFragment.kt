@@ -28,7 +28,7 @@ class NewsFragment : Fragment() {
     private val api = RetrofitClient.configureRetrofit()
     private lateinit var repository: Repository
     private val newsAdapter by lazy { NewsAdapter() }
-    private var newsList: MutableList<News>? = null
+    private var newsList: List<News>? = null
     private val newsViewModel: NewsViewModel by activityViewModels()
     private lateinit var disposable: Disposable
 
@@ -58,14 +58,11 @@ class NewsFragment : Fragment() {
         if (newsList == null || newsList!!.isEmpty()) {
             binding.progressBar.visibility = View.VISIBLE
 
-            val newsListReactive = repository.getNews()
+            disposable = repository.getNews()
                 .observeOn(AndroidSchedulers.mainThread())
-
-
-
-            disposable = newsListReactive.subscribe({ news ->
+                .subscribe({ news ->
                 binding.progressBar.visibility = View.GONE
-                newsList = news as MutableList<News>?
+                newsList = news
                 newsViewModel.setNews(news)
                 newsViewModel.setNotCheckedNewsCounter(news.count { !it.isChecked })
                 newsAdapter.submitList(news)
