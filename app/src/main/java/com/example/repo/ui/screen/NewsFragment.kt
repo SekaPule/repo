@@ -18,8 +18,6 @@ import com.example.repo.model.News
 import com.example.repo.recycler.adapter.NewsAdapter
 import com.example.repo.recycler.utils.NewsMarginItemDecoration
 import com.example.repo.ui.vm.NewsViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 
 
@@ -29,7 +27,7 @@ class NewsFragment : Fragment() {
     private val api = RetrofitClient.configureRetrofit()
     private lateinit var repository: Repository
     private val newsAdapter by lazy { NewsAdapter() }
-    private var newsList: MutableList<News>? = null
+    private var newsList: List<News>? = null
     private val newsViewModel: NewsViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -59,17 +57,14 @@ class NewsFragment : Fragment() {
             binding.progressBar.visibility = View.VISIBLE
 
             lifecycleScope.launch {
-                val newsListFlow = repository.getNews()
-
-                newsListFlow
-                    .flowOn(Dispatchers.Main)
+                repository.getNews()
                     .collect { news ->
-                    binding.progressBar.visibility = View.GONE
-                    newsList = news as MutableList<News>?
-                    newsViewModel.setNews(news)
-                    newsViewModel.setNotCheckedNewsCounter(news.count { !it.isChecked })
-                    newsAdapter.submitList(news)
-                }
+                        binding.progressBar.visibility = View.GONE
+                        newsList = news
+                        newsViewModel.setNews(news)
+                        newsViewModel.setNotCheckedNewsCounter(news.count { !it.isChecked })
+                        newsAdapter.submitList(news)
+                    }
             }
         }
 

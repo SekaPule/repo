@@ -1,13 +1,13 @@
 package com.example.repo.data.internet
 
 import com.example.repo.model.NewsList
-import kotlinx.coroutines.flow.Flow
+import com.google.gson.JsonObject
 import retrofit2.http.GET
 
 interface Api {
     @GET("/news")
-    fun getNewsFromServer(): Flow<NewsList>
+    suspend fun getNewsFromServer(): NewsList
 
     @GET("/categories")
-    fun getFiltersFromServer(): Flow<String>
+    suspend fun getFiltersFromServer(): JsonObject
 }

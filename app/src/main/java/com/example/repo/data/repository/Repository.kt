@@ -15,9 +15,7 @@ class Repository(
     fun getNews(): Flow<List<News>> {
         return flow {
             try {
-                api!!.getNewsFromServer().collect { newsList ->
-                    emit(newsList.news)
-                }
+                emit(api!!.getNewsFromServer().news)
             } catch (e: Throwable) {
                 emit(dataProvider.getNewsFromAssets())
             }
@@ -27,9 +25,7 @@ class Repository(
     fun getFilters(): Flow<String> {
         return flow {
             try {
-                api!!.getFiltersFromServer().collect { filterList ->
-                    emit(filterList)
-                }
+                emit(api!!.getFiltersFromServer().toString())
             } catch (e: Throwable) {
                 emit(dataProvider.getFilterItemsFromAssetsJson())
             }

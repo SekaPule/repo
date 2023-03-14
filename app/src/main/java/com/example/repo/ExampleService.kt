@@ -21,10 +21,8 @@ class ExampleService : IntentService(EXAMPLE_SERVICE_NAME) {
     @Deprecated("Deprecated in Java")
     override fun onHandleIntent(intent: Intent?) {
 
-        val newsListJsonFlow = repository.getFilters()
-
         CoroutineScope(Dispatchers.IO).launch {
-            newsListJsonFlow
+            repository.getFilters()
                 .flowOn(Dispatchers.IO)
                 .collect { json ->
                     Log.e("BTHREAD2", Thread.currentThread().name)
