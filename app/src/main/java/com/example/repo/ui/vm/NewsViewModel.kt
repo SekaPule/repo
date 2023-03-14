@@ -25,7 +25,7 @@ class NewsViewModel : ViewModel() {
         }
     }
 
-    fun setNews(news: MutableList<News>){
+    fun setNews(news: List<News>) {
         _news = news
     }
 }
