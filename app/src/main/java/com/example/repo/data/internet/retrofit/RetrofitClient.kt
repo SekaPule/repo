@@ -12,7 +12,7 @@ object RetrofitClient {
     private const val BASE_URL = "https://af1218b4-fa91-4006-8050-b3f4c260162d.mock.pstmn.io/"
     val retrofitService: Api by lazy { initRetrofit().create(Api::class.java) }
 
-    private fun initRetrofit(): Retrofit {
+    private fun initRetrofit(): Retrofit{
         val retrofitObj: Retrofit
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
