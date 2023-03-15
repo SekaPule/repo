@@ -7,12 +7,12 @@ import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 class Repository(
-    private val api: Api?,
+    private val api: Api,
     private val dataProvider: DataProvider
 ) {
     fun getNews(): Single<List<News>> {
         return Single.create { emitter ->
-            api!!.getNewsFromServer()
+            api.getNewsFromServer()
                 .subscribeOn(Schedulers.io())
                 .subscribe({ newsList ->
                     emitter.onSuccess(newsList.news)
@@ -24,7 +24,7 @@ class Repository(
 
     fun getFilters(): Single<String> {
         return Single.create { emitter->
-            api!!.getFiltersFromServer()
+            api.getFiltersFromServer()
                 .subscribeOn(Schedulers.io())
                 .subscribe({ json->
                     emitter.onSuccess(json)

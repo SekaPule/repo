@@ -10,7 +10,7 @@ import com.example.repo.data.repository.Repository
 
 class ExampleService : IntentService(EXAMPLE_SERVICE_NAME) {
     private val dataProvider = DataProvider(this)
-    private val api = RetrofitClient.configureRetrofit()
+    private val api = RetrofitClient.retrofitService
     private val repository = Repository(api = api, dataProvider = dataProvider)
     private lateinit var filters: String
 
