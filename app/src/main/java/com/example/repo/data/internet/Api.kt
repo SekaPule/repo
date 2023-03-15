@@ -1,13 +1,13 @@
 package com.example.repo.data.internet
 
 import com.example.repo.model.NewsList
-import io.reactivex.rxjava3.core.Single
+import com.google.gson.JsonObject
 import retrofit2.http.GET
 
 interface Api {
     @GET("/news")
-    fun getNewsFromServer(): Single<NewsList>
+    suspend fun getNewsFromServer(): NewsList
 
     @GET("/categories")
-    fun getFiltersFromServer(): Single<String>
+    suspend fun getFiltersFromServer(): JsonObject
 }

@@ -1,13 +1,13 @@
 package com.example.repo.ui.screen
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.commit
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.repo.R
 import com.example.repo.data.DataProvider
@@ -18,8 +18,7 @@ import com.example.repo.model.News
 import com.example.repo.recycler.adapter.NewsAdapter
 import com.example.repo.recycler.utils.NewsMarginItemDecoration
 import com.example.repo.ui.vm.NewsViewModel
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.disposables.Disposable
+import kotlinx.coroutines.launch
 
 
 class NewsFragment : Fragment() {
@@ -30,7 +29,6 @@ class NewsFragment : Fragment() {
     private val newsAdapter by lazy { NewsAdapter() }
     private var newsList: List<News>? = null
     private val newsViewModel: NewsViewModel by activityViewModels()
-    private lateinit var disposable: Disposable
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,17 +56,16 @@ class NewsFragment : Fragment() {
         if (newsList == null || newsList!!.isEmpty()) {
             binding.progressBar.visibility = View.VISIBLE
 
-            disposable = repository.getNews()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ news ->
-                binding.progressBar.visibility = View.GONE
-                newsList = news
-                newsViewModel.setNews(news)
-                newsViewModel.setNotCheckedNewsCounter(news.count { !it.isChecked })
-                newsAdapter.submitList(news)
-            }, { error ->
-                Log.e("TAG", "$error")
-            })
+            lifecycleScope.launch {
+                repository.getNews()
+                    .collect { news ->
+                        binding.progressBar.visibility = View.GONE
+                        newsList = news
+                        newsViewModel.setNews(news)
+                        newsViewModel.setNotCheckedNewsCounter(news.count { !it.isChecked })
+                        newsAdapter.submitList(news)
+                    }
+            }
         }
 
         binding.toolBar.title = resources.getString(R.string.news_title)
@@ -113,11 +110,6 @@ class NewsFragment : Fragment() {
             newsViewModel.setNotCheckedNewsCounter(list.count { !it.isChecked })
         }
         newsAdapter.submitList(newsList)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        disposable.dispose()
     }
 
     companion object {

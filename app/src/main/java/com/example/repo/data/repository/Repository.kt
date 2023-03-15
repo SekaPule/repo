@@ -3,34 +3,32 @@ package com.example.repo.data.repository
 import com.example.repo.data.DataProvider
 import com.example.repo.data.internet.Api
 import com.example.repo.model.News
-import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 
 class Repository(
     private val api: Api,
     private val dataProvider: DataProvider
 ) {
-    fun getNews(): Single<List<News>> {
-        return Single.create { emitter ->
-            api.getNewsFromServer()
-                .subscribeOn(Schedulers.io())
-                .subscribe({ newsList ->
-                    emitter.onSuccess(newsList.news)
-                }, {
-                    emitter.onSuccess(dataProvider.getNewsFromAssets())
-                })
-        }
+    fun getNews(): Flow<List<News>> {
+        return flow {
+            try {
+                emit(api.getNewsFromServer().news)
+            } catch (e: Throwable) {
+                emit(dataProvider.getNewsFromAssets())
+            }
+        }.flowOn(Dispatchers.IO)
     }
 
-    fun getFilters(): Single<String> {
-        return Single.create { emitter->
-            api.getFiltersFromServer()
-                .subscribeOn(Schedulers.io())
-                .subscribe({ json->
-                    emitter.onSuccess(json)
-                },{
-                    emitter.onSuccess(dataProvider.getFilterItemsFromAssetsJson())
-                })
-        }
+    fun getFilters(): Flow<String> {
+        return flow {
+            try {
+                emit(api.getFiltersFromServer().toString())
+            } catch (e: Throwable) {
+                emit(dataProvider.getFilterItemsFromAssetsJson())
+            }
+        }.flowOn(Dispatchers.IO)
     }
 }
