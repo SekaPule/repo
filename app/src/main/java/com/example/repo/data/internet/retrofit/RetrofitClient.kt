@@ -10,10 +10,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 object RetrofitClient {
 
     private const val BASE_URL = "https://af1218b4-fa91-4006-8050-b3f4c260162d.mock.pstmn.io/"
-    private var retrofit: Retrofit? = null
-    private val retrofitService: Api? by lazy { retrofit?.create(Api::class.java) }
+    val retrofitService: Api by lazy { initRetrofit().create(Api::class.java) }
 
-    private fun initRetrofit() {
+    private fun initRetrofit(): Retrofit {
+        val retrofitObj: Retrofit
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
 
@@ -21,16 +21,13 @@ object RetrofitClient {
             .addInterceptor(interceptor)
             .build()
 
-        retrofit = Retrofit.Builder()
+        retrofitObj = Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
             .build()
-    }
 
-    fun configureRetrofit(): Api? {
-        initRetrofit()
-        return retrofitService
+        return retrofitObj
     }
 }

@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 class NewsFragment : Fragment() {
     private lateinit var binding: FragmentNewsBinding
     private lateinit var dataProvider: DataProvider
-    private val api = RetrofitClient.configureRetrofit()
+    private val api = RetrofitClient.retrofitService
     private lateinit var repository: Repository
     private val newsAdapter by lazy { NewsAdapter() }
     private var newsList: List<News>? = null

@@ -9,13 +9,13 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
 class Repository(
-    private val api: Api?,
+    private val api: Api,
     private val dataProvider: DataProvider
 ) {
     fun getNews(): Flow<List<News>> {
         return flow {
             try {
-                emit(api!!.getNewsFromServer().news)
+                emit(api.getNewsFromServer().news)
             } catch (e: Throwable) {
                 emit(dataProvider.getNewsFromAssets())
             }
@@ -25,7 +25,7 @@ class Repository(
     fun getFilters(): Flow<String> {
         return flow {
             try {
-                emit(api!!.getFiltersFromServer().toString())
+                emit(api.getFiltersFromServer().toString())
             } catch (e: Throwable) {
                 emit(dataProvider.getFilterItemsFromAssetsJson())
             }
