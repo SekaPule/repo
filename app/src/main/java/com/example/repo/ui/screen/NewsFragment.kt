@@ -11,22 +11,24 @@ import androidx.fragment.app.commit
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.repo.R
 import com.example.repo.data.DataProvider
+import com.example.repo.data.internet.retrofit.RetrofitClient
+import com.example.repo.data.repository.Repository
 import com.example.repo.databinding.FragmentNewsBinding
 import com.example.repo.model.News
 import com.example.repo.recycler.adapter.NewsAdapter
 import com.example.repo.recycler.utils.NewsMarginItemDecoration
 import com.example.repo.ui.vm.NewsViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.Disposable
-import io.reactivex.rxjava3.schedulers.Schedulers
 
 
 class NewsFragment : Fragment() {
     private lateinit var binding: FragmentNewsBinding
     private lateinit var dataProvider: DataProvider
+    private val api = RetrofitClient.retrofitService
+    private lateinit var repository: Repository
     private val newsAdapter by lazy { NewsAdapter() }
-    private var newsList: MutableList<News>? = null
+    private var newsList: List<News>? = null
     private val newsViewModel: NewsViewModel by activityViewModels()
     private lateinit var disposable: Disposable
 
@@ -35,6 +37,7 @@ class NewsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         dataProvider = DataProvider(requireContext())
+        repository = Repository(api = api, dataProvider = dataProvider)
         binding = FragmentNewsBinding.inflate(inflater)
         return binding.root
     }
@@ -55,16 +58,9 @@ class NewsFragment : Fragment() {
         if (newsList == null || newsList!!.isEmpty()) {
             binding.progressBar.visibility = View.VISIBLE
 
-            val newsListReactive = Single.create { emitter ->
-                emitter.onSuccess(dataProvider.getNewsFromAssets() as MutableList<News>)
-                Log.e("THREAD1", Thread.currentThread().name)
-            }.subscribeOn(Schedulers.io())
+            disposable = repository.getNews()
                 .observeOn(AndroidSchedulers.mainThread())
-
-
-
-            disposable = newsListReactive.subscribe({ news ->
-                Log.e("THREAD2", Thread.currentThread().name)
+                .subscribe({ news ->
                 binding.progressBar.visibility = View.GONE
                 newsList = news
                 newsViewModel.setNews(news)

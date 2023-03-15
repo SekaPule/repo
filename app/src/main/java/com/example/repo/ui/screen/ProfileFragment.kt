@@ -15,8 +15,8 @@ import com.example.repo.recycler.adapter.FriendsAdapter
 import com.example.repo.ui.fragments.EditImageDialog
 
 class ProfileFragment : Fragment() {
-    var pickedPhoto : Uri? = null
-    var pickedBitMap : Bitmap? = null
+    var pickedPhoto: Uri? = null
+    var pickedBitMap: Bitmap? = null
 
     private lateinit var binding: FragmentProfileBinding
     override fun onCreateView(
@@ -31,17 +31,26 @@ class ProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val dialog = EditImageDialog()
 
-        parentFragmentManager.setFragmentResultListener("requestKey", requireActivity()) { _, bundle ->
+        parentFragmentManager.setFragmentResultListener(
+            "requestKey",
+            requireActivity()
+        ) { _, bundle ->
             // We use a String here, but any type that can be put in a Bundle is supported
             val uri = Uri.parse(bundle.getString("bundleKey"))
             binding.imageView.setImageURI(uri)
         }
 
-        parentFragmentManager.setFragmentResultListener("removeImageKey", requireActivity()) { _, _ ->
+        parentFragmentManager.setFragmentResultListener(
+            "removeImageKey",
+            requireActivity()
+        ) { _, _ ->
             binding.imageView.setImageResource(R.drawable.ic_user_icon)
         }
 
-        parentFragmentManager.setFragmentResultListener("changeImageKey", requireActivity()) { _, bundle ->
+        parentFragmentManager.setFragmentResultListener(
+            "changeImageKey",
+            requireActivity()
+        ) { _, bundle ->
             val uri = Uri.parse(bundle.getString("bundleImageKey"))
             binding.imageView.setImageURI(uri)
             dialog.dialog?.cancel()
@@ -50,9 +59,21 @@ class ProfileFragment : Fragment() {
         binding.friendsRV.layoutManager = LinearLayoutManager(requireContext())
         binding.friendsRV.adapter = FriendsAdapter(
             friends = listOf(
-                Friend(id = 1, icon = R.drawable.avatar_1, fullName = "Дмитрий Валерьевич"),
-                Friend(id = 2, icon = R.drawable.avatar_2, fullName = "Евгений Александров"),
-                Friend(id = 3, icon = R.drawable.avatar_3, fullName = "Виктор Кузнецов"),
+                Friend(
+                    id = 1,
+                    icon = "https://cdn.dribbble.com/users/130163/screenshots/6209150/twitch-avatar.png",
+                    fullName = "Дмитрий Валерьевич"
+                ),
+                Friend(
+                    id = 2,
+                    icon = "https://coolsen.ru/wp-content/uploads/2022/02/156-20220208_183149.jpg",
+                    fullName = "Евгений Александров"
+                ),
+                Friend(
+                    id = 3,
+                    icon = "https://ru-static.z-dn.net/files/dec/766e9ce4da138cddd8003fe88f8dbf8e.png11",
+                    fullName = "Виктор Кузнецов"
+                ),
             )
         )
 
