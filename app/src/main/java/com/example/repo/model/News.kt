@@ -2,6 +2,7 @@ package com.example.repo.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.example.repo.data.db.entities.NewsEntity
 
 data class News(
     val id: Int,
@@ -15,7 +16,7 @@ data class News(
     val description: String?,
     val subDescription: String?,
     var isChecked: Boolean = false,
-) :Parcelable{
+) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readInt(),
         parcel.createStringArrayList(),
@@ -60,3 +61,16 @@ data class News(
     }
 
 }
+
+fun News.toNewsEntity(): NewsEntity = NewsEntity(
+    id = id,
+    category = category,
+    title = title,
+    organization = organization,
+    date = date,
+    location = location,
+    phoneNumbers = phoneNumbers,
+    titleDescription = titleDescription,
+    description = description,
+    subDescription = subDescription
+)

@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.repo.R
 import com.example.repo.data.DataProvider
+import com.example.repo.data.db.RepoDatabase
 import com.example.repo.data.internet.retrofit.RetrofitClient
 import com.example.repo.data.repository.Repository
 import com.example.repo.databinding.FragmentNewsBinding
@@ -35,7 +36,11 @@ class NewsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         dataProvider = DataProvider(requireContext())
-        repository = Repository(api = api, dataProvider = dataProvider)
+        repository = Repository(
+            api = api,
+            dataProvider = dataProvider,
+            dao = RepoDatabase.configureRoomClient(requireContext()).repoDao()
+        )
         binding = FragmentNewsBinding.inflate(inflater)
         return binding.root
     }
