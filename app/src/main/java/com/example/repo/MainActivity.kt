@@ -10,10 +10,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
 import com.example.repo.data.DataProvider
+import com.example.repo.data.db.RepoDatabase
+import com.example.repo.data.internet.Api
+import com.example.repo.data.internet.retrofit.RetrofitClient
+import com.example.repo.data.repository.Repository
 import com.example.repo.databinding.ActivityMainBinding
 import com.example.repo.model.News
 import com.example.repo.ui.screen.*
 import com.example.repo.ui.vm.NewsViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.concurrent.thread
 
@@ -23,12 +28,22 @@ class MainActivity : AppCompatActivity() {
     private var checked: Boolean = false
     private val newsViewModel: NewsViewModel by viewModels()
     private val dataProvider = DataProvider(this)
+    private val api: Api = RetrofitClient.retrofitService
+    private lateinit var repository: Repository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        repository = Repository(
+            api = api,
+            dataProvider = dataProvider,
+            dao = RepoDatabase.configureRoomClient(this).repoDao()
+        )
+        lifecycleScope.launch(Dispatchers.IO) {
+            repository.initDataForCurrentSession()
+        }
 
         val badge = binding.navView.getOrCreateBadge(R.id.navigationNews)
         badge.apply {
@@ -42,7 +57,7 @@ class MainActivity : AppCompatActivity() {
                     badge.number = countNotChecked
                     badge.isVisible = countNotChecked > 0
                 }
-            }catch (e: Throwable){
+            } catch (e: Throwable) {
                 e.localizedMessage?.let { Log.e("TAG", it) }
             }
         }

@@ -4,6 +4,7 @@ import android.app.IntentService
 import android.content.Intent
 import android.util.Log
 import com.example.repo.data.DataProvider
+import com.example.repo.data.db.RepoDatabase
 import com.example.repo.data.internet.retrofit.RetrofitClient
 import com.example.repo.data.repository.Repository
 import kotlinx.coroutines.CoroutineScope
@@ -15,7 +16,11 @@ import kotlinx.coroutines.launch
 class ExampleService : IntentService(EXAMPLE_SERVICE_NAME) {
     private val dataProvider = DataProvider(this)
     private val api = RetrofitClient.retrofitService
-    private val repository = Repository(api = api, dataProvider = dataProvider)
+    private val repository = Repository(
+        api = api,
+        dataProvider = dataProvider,
+        dao = RepoDatabase.configureRoomClient(this).repoDao()
+    )
     private lateinit var filters: String
 
     @Deprecated("Deprecated in Java")

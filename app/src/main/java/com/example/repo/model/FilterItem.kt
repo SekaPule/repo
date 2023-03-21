@@ -2,11 +2,12 @@ package com.example.repo.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.example.repo.data.db.entities.FilterItemEntity
 
 data class FilterItem(
     val id: Int,
     val name: String?,
-    var check: Boolean
+    var check: Boolean = false
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readInt(),
@@ -36,3 +37,8 @@ data class FilterItem(
     }
 
 }
+
+fun FilterItem.toFilterItemEntity(): FilterItemEntity = FilterItemEntity(
+    id = id,
+    name = name
+)
