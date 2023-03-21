@@ -12,9 +12,7 @@ import com.example.repo.model.toNewsEntity
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.*
 
 class Repository(
     private val api: Api,
@@ -24,13 +22,11 @@ class Repository(
     fun getNews(): Flow<List<News>> {
         return flow {
             try {
-                dao.getAllNews().collect { entityList ->
-                    emit(
-                        entityList.map { newsEntity ->
-                            newsEntity.toNewsModel()
-                        }
-                    )
-                }
+                emitAll(dao.getAllNews().map { list ->
+                    list.map { entity ->
+                        entity.toNewsModel()
+                    }
+                })
             } catch (e: Throwable) {
                 emit(dataProvider.getNewsFromAssets())
             }
@@ -41,17 +37,15 @@ class Repository(
     fun getFilters(): Flow<String> {
         return flow {
             try {
-                dao.getAllFilters().collect { entityList ->
-                    emit(
-                        Gson().toJson(
-                            FilterList(
-                                filters = entityList.map {
-                                    it.toFilterItemModel()
-                                }
-                            )
+                emitAll(dao.getAllFilters().map { entityList ->
+                    Gson().toJson(
+                        FilterList(
+                            filters = entityList.map {
+                                it.toFilterItemModel()
+                            }
                         )
                     )
-                }
+                })
             } catch (e: Throwable) {
                 emit(dataProvider.getFilterItemsFromAssetsJson())
             }
@@ -59,19 +53,25 @@ class Repository(
     }
 
     suspend fun initDataForCurrentSession() {
-        dao.insertAllNews(
-            api.getNewsFromServer().news.map {
-                it.toNewsEntity()
-            }
-        )
-        val filterList: FilterList = Gson().fromJson(
-            api.getFiltersFromServer(),
-            object : TypeToken<FilterList>() {}.type
-        )
-        dao.insertAllFilters(
-            filterList.filters.map {
-                it.toFilterItemEntity()
-            }
-        )
+        val newsList = try {
+            api.getNewsFromServer().news
+        } catch (e: Throwable) {
+            dataProvider.getNewsFromAssets()
+        }
+        dao.insertAllNews(newsList.map {
+            it.toNewsEntity()
+        })
+
+        val filterList = try {
+            Gson().fromJson<FilterList?>(
+                api.getFiltersFromServer(),
+                object : TypeToken<FilterList>() {}.type
+            ).filters
+        } catch (e: Throwable) {
+            dataProvider.getFilterItemsFromAssets()
+        }
+        dao.insertAllFilters(filterList.map {
+            it.toFilterItemEntity()
+        })
     }
 }
