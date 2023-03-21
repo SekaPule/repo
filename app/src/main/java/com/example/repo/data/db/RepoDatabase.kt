@@ -9,7 +9,7 @@ import com.example.repo.data.db.entities.FilterItemEntity
 import com.example.repo.data.db.entities.ListConverter
 import com.example.repo.data.db.entities.NewsEntity
 
-@Database(entities = [NewsEntity::class, FilterItemEntity::class], version = 1)
+@Database(entities = [NewsEntity::class, FilterItemEntity::class], version = 2)
 @TypeConverters(ListConverter::class)
 abstract class RepoDatabase : RoomDatabase() {
     abstract fun repoDao(): RepoDao

@@ -13,13 +13,9 @@ data class FilterItemEntity(
 
     @ColumnInfo(name = "name")
     val name: String?,
-
-    @ColumnInfo(name = "check")
-    var check: Boolean
 )
 
 fun FilterItemEntity.toFilterItemModel(): FilterItem = FilterItem(
     id = id,
-    name = name,
-    check = check
+    name = name
 )
