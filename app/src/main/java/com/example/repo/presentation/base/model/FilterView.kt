@@ -1,10 +1,9 @@
-package com.example.repo.model
+package com.example.repo.presentation.base.model
 
 import android.os.Parcel
 import android.os.Parcelable
-import com.example.repo.data.db.entities.FilterItemEntity
 
-data class FilterItem(
+data class FilterView(
     val id: Int,
     val name: String?,
     var check: Boolean = false
@@ -26,19 +25,14 @@ data class FilterItem(
         return 0
     }
 
-    companion object CREATOR : Parcelable.Creator<FilterItem> {
-        override fun createFromParcel(parcel: Parcel): FilterItem {
-            return FilterItem(parcel)
+    companion object CREATOR : Parcelable.Creator<FilterView> {
+        override fun createFromParcel(parcel: Parcel): FilterView {
+            return FilterView(parcel)
         }
 
-        override fun newArray(size: Int): Array<FilterItem?> {
+        override fun newArray(size: Int): Array<FilterView?> {
             return arrayOfNulls(size)
         }
     }
 
 }
-
-fun FilterItem.toFilterItemEntity(): FilterItemEntity = FilterItemEntity(
-    id = id,
-    name = name
-)
