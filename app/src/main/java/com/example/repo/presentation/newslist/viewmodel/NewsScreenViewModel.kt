@@ -1,0 +1,54 @@
+package com.example.repo.presentation.newslist.viewmodel
+
+import android.util.Log
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.repo.domain.interactor.GetNewsUseCase
+import com.example.repo.domain.interactor.InitDataForCurrentSessionUseCase
+import com.example.repo.presentation.base.mapper.NewsViewMapper
+import com.example.repo.presentation.base.model.NewsView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+class NewsScreenViewModel @Inject constructor(
+    private val getNewsUseCase: GetNewsUseCase,
+    private val initDataForCurrentSessionUseCase: InitDataForCurrentSessionUseCase,
+    private val newsViewMapper: NewsViewMapper
+) : ViewModel() {
+
+    fun getNews(): Flow<List<NewsView>> = flow{
+        emitAll(getNewsUseCase.execute().map {  list ->
+            list.map { domainModel->
+                newsViewMapper.mapFromDomainModel(type = domainModel)
+            }
+        })
+    }
+
+    fun initData() {
+        viewModelScope.launch(Dispatchers.IO) {
+            initDataForCurrentSessionUseCase.execute()
+        }
+    }
+
+    private val _notCheckedNewsCounter = MutableStateFlow(0)
+    val notCheckedNewsCounter = _notCheckedNewsCounter.asStateFlow()
+
+    private var _news = listOf<NewsView>()
+    val news = _news
+
+    fun setNotCheckedNewsCounter(counter: Int) {
+        viewModelScope.launch {
+            try {
+                _notCheckedNewsCounter.emit(counter)
+            } catch (e: Throwable) {
+                e.localizedMessage?.let { Log.e("TAG", it) }
+            }
+        }
+    }
+
+    fun setNews(news: List<NewsView>) {
+        _news = news
+    }
+}

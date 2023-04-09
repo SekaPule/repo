@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".ui.fragments.ViewPagerNoEventFragment">
+    tools:context=".presentation.search.views.fragments.ViewPagerNoEventFragment">
 
     <ImageView
         android:layout_width="@dimen/search_image_size"
