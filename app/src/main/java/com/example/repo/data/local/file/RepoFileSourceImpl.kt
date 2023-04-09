@@ -1,16 +1,19 @@
-package com.example.repo.data
+package com.example.repo.data.local.file
 
 import android.content.Context
-import com.example.repo.model.FilterItem
-import com.example.repo.model.FilterList
-import com.example.repo.model.News
-import com.example.repo.model.NewsList
+import com.example.repo.data.local.file.config.FileSourceBuildConfig.FILTER_ITEM_FILE_NAME
+import com.example.repo.data.local.file.config.FileSourceBuildConfig.NEWS_FILE_NAME
+import com.example.repo.domain.model.Filter
+import com.example.repo.domain.model.FilterList
+import com.example.repo.domain.model.News
+import com.example.repo.domain.model.NewsList
 import com.google.gson.Gson
 import java.io.BufferedReader
+import javax.inject.Inject
 
-class DataProvider(private val context: Context) {
+class RepoFileSourceImpl @Inject constructor(private val context: Context) : RepoFileSource {
 
-    fun getFilterItemsFromAssets(): List<FilterItem> {
+    override fun getFiltersFromAssets(): List<Filter> {
         val jsonText = context
             .assets
             .open(FILTER_ITEM_FILE_NAME)
@@ -20,7 +23,7 @@ class DataProvider(private val context: Context) {
         return Gson().fromJson(jsonText, FilterList::class.java).filters
     }
 
-    fun getFilterItemsFromAssetsJson(): String =
+    override fun getFiltersFromAssetsJson(): String =
         context
             .assets
             .open(FILTER_ITEM_FILE_NAME)
@@ -28,7 +31,7 @@ class DataProvider(private val context: Context) {
             .use(BufferedReader::readText)
 
 
-    fun getNewsFromAssets(): List<News> {
+    override fun getNewsFromAssets(): List<News> {
         val jsonText = context
             .assets
             .open(NEWS_FILE_NAME)
@@ -39,7 +42,5 @@ class DataProvider(private val context: Context) {
     }
 
     companion object {
-        private const val FILTER_ITEM_FILE_NAME = "filters.json"
-        private const val NEWS_FILE_NAME = "news.json"
     }
 }

@@ -1,11 +1,10 @@
-package com.example.repo.data.db.entities
+package com.example.repo.data.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
-import com.example.repo.data.db.RepoDatabase.Companion.NEWS_TABLE_NAME
-import com.example.repo.model.News
+import com.example.repo.data.local.db.config.DatabaseSourceBuildConfig.NEWS_TABLE_NAME
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -62,16 +61,3 @@ class ListConverter {
         }
     }
 }
-
-fun NewsEntity.toNewsModel(): News = News(
-    id = id,
-    category = category,
-    title = title,
-    organization = organization,
-    date = date,
-    location = location,
-    phoneNumbers = phoneNumbers,
-    titleDescription = titleDescription,
-    description = description,
-    subDescription = subDescription
-)
