@@ -3,31 +3,29 @@ package com.example.repo
 import android.app.IntentService
 import android.content.Intent
 import android.util.Log
-import com.example.repo.data.DataProvider
-import com.example.repo.data.db.RepoDatabase
-import com.example.repo.data.internet.retrofit.RetrofitClient
-import com.example.repo.data.repository.Repository
+import com.example.repo.di.app.MainApplication.Companion.appComponent
+import com.example.repo.domain.repositories.RepoRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
 class ExampleService : IntentService(EXAMPLE_SERVICE_NAME) {
-    private val dataProvider = DataProvider(this)
-    private val api = RetrofitClient.retrofitService
-    private val repository = Repository(
-        api = api,
-        dataProvider = dataProvider,
-        dao = RepoDatabase.configureRoomClient(this).repoDao()
-    )
-    private lateinit var filters: String
+
+    @Inject
+    lateinit var repoRepository: RepoRepository
+
+    init {
+        appComponent().inject(this)
+    }
 
     @Deprecated("Deprecated in Java")
     override fun onHandleIntent(intent: Intent?) {
 
         CoroutineScope(Dispatchers.IO).launch {
-            repository.getFilters()
+            repoRepository.getFilters()
                 .flowOn(Dispatchers.IO)
                 .collect { json ->
                     Log.e("BTHREAD2", Thread.currentThread().name)

@@ -8,51 +8,71 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.example.repo.data.DataProvider
-import com.example.repo.data.db.RepoDatabase
-import com.example.repo.data.internet.Api
-import com.example.repo.data.internet.retrofit.RetrofitClient
-import com.example.repo.data.repository.Repository
 import com.example.repo.databinding.ActivityMainBinding
-import com.example.repo.model.News
-import com.example.repo.ui.screen.*
-import com.example.repo.ui.vm.NewsViewModel
-import kotlinx.coroutines.Dispatchers
+import com.example.repo.di.app.MainApplication.Companion.appComponent
+import com.example.repo.presentation.auth.views.AuthScreenFragment
+import com.example.repo.presentation.categorieslist.views.CategoriesScreenFragment
+import com.example.repo.presentation.newslist.view.NewsScreenFragment
+import com.example.repo.presentation.newslist.viewmodel.NewsScreenViewModel
+import com.example.repo.presentation.profile.views.ProfileScreenFragment
+import com.example.repo.presentation.search.views.SearchScreenFragment
+import com.google.android.material.badge.BadgeDrawable
 import kotlinx.coroutines.launch
-import kotlin.concurrent.thread
+import javax.inject.Inject
 
 
 class MainActivity : AppCompatActivity() {
+
     private lateinit var binding: ActivityMainBinding
     private var checked: Boolean = false
-    private val newsViewModel: NewsViewModel by viewModels()
-    private val dataProvider = DataProvider(this)
-    private val api: Api = RetrofitClient.retrofitService
-    private lateinit var repository: Repository
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val newsScreenViewModel: NewsScreenViewModel by viewModels { viewModelFactory }
+    private lateinit var badge: BadgeDrawable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        repository = Repository(
-            api = api,
-            dataProvider = dataProvider,
-            dao = RepoDatabase.configureRoomClient(this).repoDao()
-        )
-        lifecycleScope.launch(Dispatchers.IO) {
-            repository.initDataForCurrentSession()
-        }
+        badge = binding.navView.getOrCreateBadge(R.id.navigationNews)
 
-        val badge = binding.navView.getOrCreateBadge(R.id.navigationNews)
-        badge.apply {
-            isVisible = true
-            backgroundColor = getColor(R.color.macaroni_and_cheese)
-        }
+        appComponent().inject(this)
+        initDataForCurrentSession()
+        setNavigationButtonsListener()
+        initBottomBadge()
+        initDataContent()
+        setBadgeChangeListener()
+        setFragmentResultListeners()
+        setAuthCheck()
+    }
 
+    private fun setAuthCheck() {
+        if (!checked) {
+            binding.navView.menu.findItem((R.id.navigationHelp)).isChecked = true
+            supportFragmentManager.commit {
+                replace(
+                    binding.screenContainer.id,
+                    AuthScreenFragment.newInstance()
+                )
+            }
+        }
+    }
+
+    private fun setFragmentResultListeners() {
+        supportFragmentManager.setFragmentResultListener(AUTH_KEY, this) { _, bundle ->
+            checked = bundle.getBoolean(AUTH_BUNDLE_KEY)
+            binding.navView.visibility = View.VISIBLE
+        }
+    }
+
+    private fun setBadgeChangeListener() {
         lifecycleScope.launch {
             try {
-                newsViewModel.notCheckedNewsCounter.collect { countNotChecked ->
+                newsScreenViewModel.notCheckedNewsCounter.collect { countNotChecked ->
                     badge.number = countNotChecked
                     badge.isVisible = countNotChecked > 0
                 }
@@ -60,50 +80,48 @@ class MainActivity : AppCompatActivity() {
                 e.localizedMessage?.let { Log.e("TAG", it) }
             }
         }
+    }
 
-        thread {
-            val news = dataProvider.getNewsFromAssets() as MutableList<News>
-            newsViewModel.setNews(news)
-            newsViewModel.setNotCheckedNewsCounter(news.count { !it.isChecked })
+    private fun initDataContent() {
+        lifecycleScope.launch{
+            newsScreenViewModel.getNews()
+                .collect { news ->
+                    newsScreenViewModel.setNews(news)
+                    newsScreenViewModel.setNotCheckedNewsCounter(news.count { !it.isChecked })
+                }
         }
+    }
 
-        supportFragmentManager.setFragmentResultListener(AUTH_KEY, this) { _, bundle ->
-            checked = bundle.getBoolean(AUTH_BUNDLE_KEY)
-            binding.navView.visibility = View.VISIBLE
+    private fun initBottomBadge() {
+        badge.apply {
+            isVisible = true
+            backgroundColor = getColor(R.color.macaroni_and_cheese)
         }
+    }
 
-        if (!checked) {
-            binding.navView.menu.findItem((R.id.navigationHelp)).isChecked = true
-            supportFragmentManager.commit {
-                replace(
-                    binding.screenContainer.id,
-                    AuthFragment.newInstance()
-                )
-            }
-        }
-
+    private fun setNavigationButtonsListener() {
         binding.navView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigationHelp -> {
-                    loadFragment(CategoriesOfHelpingFragment.newInstance())
+                    loadFragment(CategoriesScreenFragment.newInstance())
                     checked = true
 
                     true
                 }
                 R.id.navigationAccount -> {
-                    loadFragment(ProfileFragment.newInstance())
+                    loadFragment(ProfileScreenFragment.newInstance())
                     checked = true
 
                     true
                 }
                 R.id.navigationSearch -> {
-                    loadFragment(SearchFragment.newInstance())
+                    loadFragment(SearchScreenFragment.newInstance())
                     checked = true
 
                     true
                 }
                 R.id.navigationNews -> {
-                    loadFragment(NewsFragment.newInstance())
+                    loadFragment(NewsScreenFragment.newInstance())
                     checked = true
 
                     true
@@ -111,7 +129,10 @@ class MainActivity : AppCompatActivity() {
                 else -> false
             }
         }
+    }
 
+    private fun initDataForCurrentSession() {
+        newsScreenViewModel.initData()
     }
 
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
