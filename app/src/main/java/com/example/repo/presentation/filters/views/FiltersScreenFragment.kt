@@ -19,7 +19,6 @@ import com.example.repo.databinding.FragmentFilterBinding
 import com.example.repo.di.app.MainApplication.Companion.appComponent
 import com.example.repo.domain.model.FilterList
 import com.example.repo.presentation.base.mapper.FilterViewMapper
-import com.example.repo.presentation.base.model.FilterView
 import com.example.repo.presentation.filters.views.recycler.FilterAdapter
 import com.example.repo.presentation.filters.vm.FilterScreenViewModel
 import com.google.gson.Gson
@@ -30,7 +29,6 @@ class FiltersScreenFragment : Fragment() {
     private lateinit var binding: FragmentFilterBinding
     private val viewModel by activityViewModels<FilterScreenViewModel>()
     private var intentFilter = IntentFilter(ACTION_MY_INTENT_SERVICE)
-    private var savedFilters: List<FilterView>? = null
     private var broadcastReceiver: BroadcastReceiver = MyBroadcastReceiver()
 
     @Inject
@@ -58,8 +56,7 @@ class FiltersScreenFragment : Fragment() {
     }
 
     private fun initFilters() {
-        savedFilters = viewModel.savedFilters
-        if (savedFilters == null) {
+        if (viewModel.savedFilters == null) {
             binding.progressBar.visibility = View.VISIBLE
             Intent(requireActivity(), ExampleService::class.java).also {
                 requireActivity().startService(it)
@@ -70,7 +67,7 @@ class FiltersScreenFragment : Fragment() {
     }
 
     private fun initAdapterData() {
-        filterAdapter.filters = savedFilters!!
+        filterAdapter.filters = viewModel.savedFilters!!
     }
 
     private fun configureRecyclerView() {
@@ -141,19 +138,21 @@ class FiltersScreenFragment : Fragment() {
     }
 
     inner class MyBroadcastReceiver : BroadcastReceiver() {
+
         override fun onReceive(context: Context?, intent: Intent?) {
             val json = intent?.getStringExtra(EXTRA_KEY_OUT)
-            savedFilters =
-                viewModel.savedFilters ?: Gson().fromJson(
-                    json,
-                    FilterList::class.java
-                ).filters.map { filter ->
-                    filterViewMapper.mapFromDomainModel(type = filter)
-                }
+
+            viewModel.saveFilters(filters = Gson().fromJson(
+                json,
+                FilterList::class.java
+            ).filters.map { filter ->
+                filterViewMapper.mapFromDomainModel(type = filter)
+            })
+
             binding.progressBar.visibility = View.GONE
             binding.filterRV.apply {
                 adapter = filterAdapter.apply {
-                    filters = savedFilters!!
+                    filters = viewModel.savedFilters?: emptyList()
                 }
             }
         }

@@ -8,7 +8,8 @@ import com.example.repo.domain.interactor.InitDataForCurrentSessionUseCase
 import com.example.repo.presentation.base.mapper.NewsViewMapper
 import com.example.repo.presentation.base.model.NewsView
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,12 +19,24 @@ class NewsScreenViewModel @Inject constructor(
     private val newsViewMapper: NewsViewMapper
 ) : ViewModel() {
 
-    fun getNews(): Flow<List<NewsView>> = flow{
-        emitAll(getNewsUseCase.execute().map {  list ->
-            list.map { domainModel->
-                newsViewMapper.mapFromDomainModel(type = domainModel)
+    private val _notCheckedNewsCounter = MutableStateFlow(0)
+    val notCheckedNewsCounter = _notCheckedNewsCounter.asStateFlow()
+
+    private var _news = MutableStateFlow(emptyList<NewsView>())
+    val news = _news.asStateFlow()
+    var allNews = emptyList<NewsView>()
+
+    fun initNews() {
+        viewModelScope.launch(Dispatchers.IO) {
+            getNewsUseCase.execute().collect { newsList ->
+                allNews = newsList.map { domainModel ->
+                    newsViewMapper.mapFromDomainModel(type = domainModel)
+                }
+                _news.emit(allNews)
             }
-        })
+        }
+
+        setNotCheckedNewsCounter()
     }
 
     fun initData() {
@@ -32,23 +45,32 @@ class NewsScreenViewModel @Inject constructor(
         }
     }
 
-    private val _notCheckedNewsCounter = MutableStateFlow(0)
-    val notCheckedNewsCounter = _notCheckedNewsCounter.asStateFlow()
-
-    private var _news = listOf<NewsView>()
-    val news = _news
-
-    fun setNotCheckedNewsCounter(counter: Int) {
+    fun setNotCheckedNewsCounter() {
         viewModelScope.launch {
             try {
-                _notCheckedNewsCounter.emit(counter)
+                _news.collect { newsList ->
+                    _notCheckedNewsCounter.emit(newsList.count { !it.isChecked })
+                }
             } catch (e: Throwable) {
                 e.localizedMessage?.let { Log.e("TAG", it) }
             }
         }
     }
 
-    fun setNews(news: List<NewsView>) {
-        _news = news
+    fun filterNews(filters: List<String>) {
+        viewModelScope.launch {
+            if (filters.isNotEmpty()) {
+                _news.collect { newsList ->
+                    _news.emit(newsList.filter { news ->
+                        filters.any { filter ->
+                            news.category!!.contains(filter)
+                        }
+                    })
+                }
+            } else {
+                _news.emit(allNews)
+            }
+        }
+        setNotCheckedNewsCounter()
     }
 }
