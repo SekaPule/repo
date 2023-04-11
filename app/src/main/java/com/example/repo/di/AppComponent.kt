@@ -26,6 +26,8 @@ import javax.inject.Singleton
         RepoRepositoryBindModule::class,
         FileSourceBindModule::class,
         ContextBindModule::class,
+        ModelViewMapperModule::class,
+        ModelViewMapperBindModule::class,
         ModelMapperModule::class
     ]
 )
