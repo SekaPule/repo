@@ -1,6 +1,6 @@
 package com.example.repo.data.internet.retrofit
 
-import com.example.repo.data.internet.Api
+import com.example.repo.data.remote.RepoApiSource
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -10,7 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 object RetrofitClient {
 
     private const val BASE_URL = "https://af1218b4-fa91-4006-8050-b3f4c260162d.mock.pstmn.io/"
-    val retrofitService: Api by lazy { initRetrofit().create(Api::class.java) }
+    val retrofitService: RepoApiSource by lazy { initRetrofit().create(RepoApiSource::class.java) }
 
     private fun initRetrofit(): Retrofit{
         val retrofitObj: Retrofit

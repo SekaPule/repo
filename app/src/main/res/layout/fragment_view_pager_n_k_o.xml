@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/spacing_l"
-            tools:context=".viewpager.page.ViewPagerNKOFragment" />
+            tools:context=".presentation.search.views.viewpager.page.ViewPagerNKOFragment" />
 
         <View
             android:layout_width="match_parent"
