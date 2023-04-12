@@ -1,4 +1,4 @@
-package com.example.repo.data.remote.retrofit
+package com.example.repo.data.internet.retrofit
 
 import com.example.repo.data.remote.RepoApiSource
 import okhttp3.OkHttpClient
