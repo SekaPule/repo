@@ -1,4 +1,4 @@
-package com.example.repo.domain.model
+package com.example.categories_feature.interactor
 
 data class Category(
     val id: Int,

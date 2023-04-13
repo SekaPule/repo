@@ -1,7 +1,6 @@
-package com.example.repo.domain.interactor
+package com.example.categories_feature.interactor
 
-import com.example.repo.R
-import com.example.repo.domain.model.Category
+import com.example.categories_feature.R
 import javax.inject.Inject
 
 class GetCategoriesUseCase @Inject constructor() {
