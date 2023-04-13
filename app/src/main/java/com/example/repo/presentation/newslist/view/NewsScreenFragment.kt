@@ -13,11 +13,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.repo.R
 import com.example.repo.databinding.FragmentNewsBinding
 import com.example.repo.di.app.MainApplication.Companion.appComponent
-import com.example.repo.presentation.base.model.NewsView
 import com.example.repo.presentation.filters.views.FiltersScreenFragment
 import com.example.repo.presentation.newslist.view.recycler.NewsAdapter
 import com.example.repo.presentation.newslist.view.recycler.NewsMarginItemDecoration
 import com.example.repo.presentation.newslist.viewmodel.NewsScreenViewModel
+import com.example.search_feature.presentation.model.NewsView
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

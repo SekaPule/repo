@@ -1,7 +1,7 @@
 package com.example.repo.di.modules
 
-import com.example.repo.data.remote.RepoApiSource
-import com.example.repo.data.remote.config.RemoteSourceBuildConfig
+import com.example.data.remote.RepoApiSource
+import com.example.data.remote.config.RemoteSourceBuildConfig
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient

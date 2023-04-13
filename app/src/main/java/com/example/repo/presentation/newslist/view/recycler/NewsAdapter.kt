@@ -14,8 +14,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.repo.R
 import com.example.repo.databinding.NewsItemLayoutBinding
-import com.example.repo.presentation.base.model.NewsView
 import com.example.repo.presentation.details.views.DetailsScreenFragment
+import com.example.search_feature.presentation.model.NewsView
 import javax.inject.Inject
 
 

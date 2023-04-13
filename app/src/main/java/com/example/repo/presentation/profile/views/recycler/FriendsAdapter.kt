@@ -8,7 +8,7 @@ import coil.request.CachePolicy
 import coil.transform.CircleCropTransformation
 import com.example.repo.R
 import com.example.repo.databinding.FriendLayoutBinding
-import com.example.repo.domain.model.Friend
+import com.example.data.model.Friend
 import javax.inject.Inject
 
 class FriendsAdapter @Inject constructor() : RecyclerView.Adapter<FriendsAdapter.FriendViewHolder>() {

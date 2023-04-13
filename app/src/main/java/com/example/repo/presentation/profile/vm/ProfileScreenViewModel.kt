@@ -1,7 +1,7 @@
 package com.example.repo.presentation.profile.vm
 
 import androidx.lifecycle.ViewModel
-import com.example.repo.domain.model.Friend
+import com.example.data.model.Friend
 
 class ProfileScreenViewModel : ViewModel() {
 

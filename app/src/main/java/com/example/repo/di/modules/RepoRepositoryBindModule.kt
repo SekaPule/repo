@@ -1,7 +1,7 @@
 package com.example.repo.di.modules
 
-import com.example.repo.data.repository.RepoDataRepository
-import com.example.repo.domain.repositories.RepoRepository
+import com.example.data.repository.RepoDataRepository
+import com.example.data.repository.RepoRepository
 import dagger.Binds
 import dagger.Module
 

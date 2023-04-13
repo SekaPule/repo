@@ -1,12 +1,12 @@
 package com.example.repo.presentation.base.mapper
 
-import com.example.repo.domain.model.News
-import com.example.repo.presentation.base.Mapper
-import com.example.repo.presentation.base.model.NewsView
+import com.example.data.model.News
+import com.example.search_feature.presentation.mapper.NewsViewMapper
+import com.example.search_feature.presentation.model.NewsView
 import kotlinx.datetime.*
 import javax.inject.Inject
 
-class NewsViewMapper @Inject constructor() : Mapper<News, NewsView> {
+class NewsViewMapperImpl @Inject constructor() : NewsViewMapper {
     override fun mapFromDomainModel(type: News): NewsView = NewsView(
         id = type.id,
         category = type.category,

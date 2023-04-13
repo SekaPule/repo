@@ -10,14 +10,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.example.auth_feature.presentation.views.AuthScreenFragment
+import com.example.categories_feature.presentation.views.CategoriesScreenFragment
 import com.example.repo.databinding.ActivityMainBinding
 import com.example.repo.di.app.MainApplication.Companion.appComponent
-import com.example.repo.presentation.auth.views.AuthScreenFragment
-import com.example.repo.presentation.categorieslist.views.CategoriesScreenFragment
 import com.example.repo.presentation.newslist.view.NewsScreenFragment
 import com.example.repo.presentation.newslist.viewmodel.NewsScreenViewModel
 import com.example.repo.presentation.profile.views.ProfileScreenFragment
-import com.example.repo.presentation.search.views.SearchScreenFragment
+import com.example.search_feature.presentation.views.SearchScreenFragment
 import com.google.android.material.badge.BadgeDrawable
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -65,6 +65,7 @@ class MainActivity : AppCompatActivity() {
     private fun setFragmentResultListeners() {
         supportFragmentManager.setFragmentResultListener(AUTH_KEY, this) { _, bundle ->
             checked = bundle.getBoolean(AUTH_BUNDLE_KEY)
+            loadFragment(CategoriesScreenFragment.newInstance())
             binding.navView.visibility = View.VISIBLE
         }
     }
