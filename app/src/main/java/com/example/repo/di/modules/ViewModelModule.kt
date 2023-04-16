@@ -2,10 +2,10 @@ package com.example.repo.di.modules
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.repo.presentation.auth.vm.AuthScreenViewModel
-import com.example.repo.presentation.categorieslist.vm.CategoriesScreenViewModel
+import com.example.auth_feature.presentation.vm.AuthScreenViewModel
+import com.example.categories_feature.presentation.vm.CategoriesScreenViewModel
 import com.example.repo.presentation.newslist.viewmodel.NewsScreenViewModel
-import com.example.repo.presentation.search.vm.SearchScreenViewModel
+import com.example.search_feature.presentation.vm.SearchScreenViewModel
 import dagger.Binds
 import dagger.MapKey
 import dagger.Module

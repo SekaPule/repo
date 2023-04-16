@@ -65,7 +65,10 @@ subprojects {
 }
 
 dependencies {
-    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    implementation project(':auth-feature')
+    implementation project(':categories-feature')
+    implementation project(':search-feature')
+    implementation project(':data')
 
     // RxJava
     implementation 'io.reactivex.rxjava3:rxjava:3.1.6'

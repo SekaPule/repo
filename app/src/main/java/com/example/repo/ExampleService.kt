@@ -4,7 +4,7 @@ import android.app.IntentService
 import android.content.Intent
 import android.util.Log
 import com.example.repo.di.app.MainApplication.Companion.appComponent
-import com.example.repo.domain.repositories.RepoRepository
+import com.example.data.repository.RepoRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOn

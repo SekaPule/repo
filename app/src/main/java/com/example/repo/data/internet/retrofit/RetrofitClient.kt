@@ -1,6 +1,6 @@
 package com.example.repo.data.internet.retrofit
 
-import com.example.repo.data.remote.RepoApiSource
+import com.example.data.remote.RepoApiSource
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit

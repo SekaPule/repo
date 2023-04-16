@@ -1,7 +1,7 @@
 package com.example.repo.di.modules
 
-import com.example.repo.data.local.db.RepoDao
-import com.example.repo.data.local.db.RepoDatabaseSource
+import com.example.data.local.db.RepoDao
+import com.example.data.local.db.RepoDatabaseSource
 import dagger.Binds
 import dagger.Module
 

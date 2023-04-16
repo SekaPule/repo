@@ -3,13 +3,12 @@ package com.example.repo.presentation.newslist.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.repo.domain.interactor.GetNewsUseCase
 import com.example.repo.domain.interactor.InitDataForCurrentSessionUseCase
-import com.example.repo.presentation.base.mapper.NewsViewMapper
-import com.example.repo.presentation.base.model.NewsView
+import com.example.search_feature.interactor.GetNewsUseCase
+import com.example.search_feature.presentation.mapper.NewsViewMapper
+import com.example.search_feature.presentation.model.NewsView
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

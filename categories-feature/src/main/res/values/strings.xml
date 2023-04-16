@@ -1,0 +1,5 @@
+<resources>
+    <string name="choose_category_of_helping_text">Выберете категорию помощи</string>
+    <string name="help_title">Помочь</string>
+    <string name="category_icon_description">category icon</string>
+</resources>

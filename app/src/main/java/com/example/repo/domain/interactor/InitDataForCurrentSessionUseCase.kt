@@ -1,6 +1,6 @@
 package com.example.repo.domain.interactor
 
-import com.example.repo.domain.repositories.RepoRepository
+import com.example.data.repository.RepoRepository
 import javax.inject.Inject
 
 class InitDataForCurrentSessionUseCase @Inject constructor(

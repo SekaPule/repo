@@ -12,12 +12,12 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResult
+import com.example.data.model.FilterList
 import com.example.repo.ExampleService
 import com.example.repo.ExampleService.Companion.ACTION_MY_INTENT_SERVICE
 import com.example.repo.R
 import com.example.repo.databinding.FragmentFilterBinding
 import com.example.repo.di.app.MainApplication.Companion.appComponent
-import com.example.repo.domain.model.FilterList
 import com.example.repo.presentation.base.mapper.FilterViewMapper
 import com.example.repo.presentation.filters.views.recycler.FilterAdapter
 import com.example.repo.presentation.filters.vm.FilterScreenViewModel
