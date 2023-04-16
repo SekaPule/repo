@@ -2,8 +2,8 @@ package com.example.data.repository
 
 import com.example.data.local.db.RepoDatabaseSource
 import com.example.data.local.file.RepoFileSource
-import com.example.data.mapper.FilterMapper
-import com.example.data.mapper.NewsMapper
+import com.example.data.mapper.FilterMapperImpl
+import com.example.data.mapper.NewsMapperImpl
 import com.example.data.model.FilterList
 import com.example.data.model.News
 import com.example.data.remote.RepoRemoteSource
@@ -17,8 +17,8 @@ class RepoDataRepository @Inject constructor(
     private val repoApiSource: RepoRemoteSource,
     private val repoFileSource: RepoFileSource,
     private val dao: RepoDatabaseSource,
-    private val newsMapper: NewsMapper,
-    private val filterMapper: FilterMapper
+    private val newsMapper: NewsMapperImpl,
+    private val filterMapper: FilterMapperImpl
 ) : RepoRepository {
 
     override fun getNews(): Flow<List<News>> {

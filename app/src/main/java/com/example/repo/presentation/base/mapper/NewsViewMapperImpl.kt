@@ -7,6 +7,7 @@ import kotlinx.datetime.*
 import javax.inject.Inject
 
 class NewsViewMapperImpl @Inject constructor() : NewsViewMapper {
+
     override fun mapFromDomainModel(type: News): NewsView = NewsView(
         id = type.id,
         category = type.category,

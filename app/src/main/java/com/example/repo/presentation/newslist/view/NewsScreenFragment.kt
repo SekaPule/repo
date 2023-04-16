@@ -17,14 +17,14 @@ import com.example.repo.presentation.filters.views.FiltersScreenFragment
 import com.example.repo.presentation.newslist.view.recycler.NewsAdapter
 import com.example.repo.presentation.newslist.view.recycler.NewsMarginItemDecoration
 import com.example.repo.presentation.newslist.viewmodel.NewsScreenViewModel
-import com.example.search_feature.presentation.model.NewsView
+import kotlinx.coroutines.flow.onEmpty
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
 class NewsScreenFragment : Fragment() {
+
     private lateinit var binding: FragmentNewsBinding
-    private var newsList: List<NewsView>? = null
 
     @Inject
     lateinit var newsAdapter: NewsAdapter
@@ -64,17 +64,7 @@ class NewsScreenFragment : Fragment() {
     }
 
     private fun filterNewsList(filters: List<String>) {
-        if (filters.isNotEmpty()) {
-            val newsFiltered: List<NewsView> = newsAdapter.currentList.filter { news ->
-                filters.any { filter ->
-                    news.category!!.contains(filter)
-                }
-            }
-
-            newsList = newsFiltered
-            newsScreenViewModel.setNews(newsList!!)
-            newsScreenViewModel.setNotCheckedNewsCounter(newsList!!.count { !it.isChecked })
-        }
+        newsScreenViewModel.filterNews(filters = filters)
     }
 
     private fun configureToolBar() {
@@ -93,18 +83,12 @@ class NewsScreenFragment : Fragment() {
     }
 
     private fun initDataContent() {
-        if (newsList == null || newsList!!.isEmpty()) {
+        newsScreenViewModel.news.onEmpty {
             binding.progressBar.visibility = View.VISIBLE
-
-            lifecycleScope.launch {
-                newsScreenViewModel.getNews()
-                    .collect { news ->
-                        binding.progressBar.visibility = View.GONE
-                        newsList = news
-                        newsScreenViewModel.setNews(news)
-                        newsScreenViewModel.setNotCheckedNewsCounter(news.count { !it.isChecked })
-                        newsAdapter.submitList(news)
-                    }
+            newsScreenViewModel.initNews()
+            newsScreenViewModel.news.collect { newsList ->
+                newsAdapter.submitList(newsList)
+                binding.progressBar.visibility = View.GONE
             }
         }
     }
@@ -123,12 +107,13 @@ class NewsScreenFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        newsScreenViewModel.setNotCheckedNewsCounter()
 
-        newsList?.let { newsScreenViewModel.setNews(it) }
-        newsList?.let { list ->
-            newsScreenViewModel.setNotCheckedNewsCounter(list.count { !it.isChecked })
+        viewLifecycleOwner.lifecycleScope.launch {
+            newsScreenViewModel.news.collect { newsList ->
+                newsAdapter.submitList(newsList)
+            }
         }
-        newsAdapter.submitList(newsList)
     }
 
     companion object {

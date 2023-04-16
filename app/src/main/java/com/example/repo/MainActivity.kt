@@ -84,13 +84,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initDataContent() {
-        lifecycleScope.launch{
-            newsScreenViewModel.getNews()
-                .collect { news ->
-                    newsScreenViewModel.setNews(news)
-                    newsScreenViewModel.setNotCheckedNewsCounter(news.count { !it.isChecked })
-                }
-        }
+        newsScreenViewModel.initNews()
     }
 
     private fun initBottomBadge() {

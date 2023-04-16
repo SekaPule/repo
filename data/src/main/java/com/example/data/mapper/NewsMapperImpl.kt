@@ -4,7 +4,8 @@ import com.example.data.model.News
 import com.example.data.model.NewsEntity
 import javax.inject.Inject
 
-class NewsMapper @Inject constructor() : Mapper<NewsEntity, News> {
+class NewsMapperImpl @Inject constructor() : NewsMapper {
+
     override fun mapFromEntity(type: NewsEntity): News = News(
         id = type.id,
         category = type.category,
