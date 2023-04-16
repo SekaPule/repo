@@ -3,9 +3,9 @@ package com.example.repo.presentation.newslist.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.repo.domain.interactor.GetNewsUseCaseImpl
 import com.example.repo.domain.interactor.InitDataForCurrentSessionUseCase
-import com.example.repo.presentation.base.mapper.NewsViewMapperImpl
+import com.example.search_feature.interactor.GetNewsUseCase
+import com.example.search_feature.presentation.mapper.NewsViewMapper
 import com.example.search_feature.presentation.model.NewsView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -13,9 +13,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class NewsScreenViewModel @Inject constructor(
-    private val getNewsUseCase: GetNewsUseCaseImpl,
+    private val getNewsUseCase: GetNewsUseCase,
     private val initDataForCurrentSessionUseCase: InitDataForCurrentSessionUseCase,
-    private val newsViewMapper: NewsViewMapperImpl
+    private val newsViewMapper: NewsViewMapper
 ) : ViewModel() {
 
     fun getNews(): Flow<List<NewsView>> = flow {
