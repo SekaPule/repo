@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.ui.platform.ComposeView
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.commit
@@ -13,10 +15,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.repo.R
 import com.example.repo.databinding.FragmentNewsBinding
 import com.example.repo.di.app.MainApplication.Companion.appComponent
+import com.example.repo.presentation.details.views.DetailsScreenFragment
 import com.example.repo.presentation.filters.views.FiltersScreenFragment
+import com.example.repo.presentation.newslist.view.NewsScreenFragment.Companion.NEWS_ITEM_KEY
 import com.example.repo.presentation.newslist.view.recycler.NewsAdapter
 import com.example.repo.presentation.newslist.view.recycler.NewsMarginItemDecoration
 import com.example.repo.presentation.newslist.viewmodel.NewsScreenViewModel
+import com.example.repo.presentation.theme.RepoTheme
 import kotlinx.coroutines.flow.onEmpty
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -39,7 +44,13 @@ class NewsScreenFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentNewsBinding.inflate(inflater)
-        return binding.root
+        return ComposeView(requireContext()).apply {
+            setContent {
+                RepoTheme {
+                    NewsScreen(viewModel = newsScreenViewModel)
+                }
+            }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -50,6 +61,33 @@ class NewsScreenFragment : Fragment() {
         initDataContent()
         configureToolBar()
         setFragmentResultListeners()
+        setNavigationListener()
+    }
+
+    private fun setNavigationListener() {
+        newsScreenViewModel.openDetails.observe(viewLifecycleOwner) { newsView ->
+            val bundle = bundleOf(
+                NEWS_ITEM_KEY to newsView
+            )
+
+            val fragment = DetailsScreenFragment.newInstance()
+            fragment.arguments = bundle
+
+            parentFragmentManager.commit {
+                replace(R.id.screenContainer, fragment)
+                addToBackStack("")
+            }
+        }
+
+        newsScreenViewModel.openFilters.observe(viewLifecycleOwner) {
+            parentFragmentManager.commit {
+                replace(
+                    R.id.screenContainer,
+                    FiltersScreenFragment.newInstance()
+                )
+                addToBackStack("")
+            }
+        }
     }
 
     private fun setFragmentResultListeners() {
@@ -119,6 +157,7 @@ class NewsScreenFragment : Fragment() {
     companion object {
         private const val FILTER_RESULT_KEY = "filterResultKey"
         private const val FILTER_BUNDLE_KEY = "filterBundleKey"
+        private const val NEWS_ITEM_KEY = "newsItemKey"
 
         @JvmStatic
         fun newInstance() = NewsScreenFragment()

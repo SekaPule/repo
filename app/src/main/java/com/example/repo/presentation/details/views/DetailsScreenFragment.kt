@@ -4,14 +4,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.ui.platform.ComposeView
 import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import com.example.repo.R
 import com.example.repo.databinding.FragmentDetailsBinding
 import com.example.repo.di.app.MainApplication.Companion.appComponent
-import com.example.repo.presentation.base.model.NewsView
 import com.example.repo.presentation.details.views.recycler.PhoneAdapter
+import com.example.repo.presentation.details.vm.DetailsIntent
+import com.example.repo.presentation.details.vm.DetailsScreenViewModel
+import com.example.repo.presentation.theme.RepoTheme
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import javax.inject.Inject
 
@@ -19,10 +23,14 @@ class DetailsScreenFragment : Fragment() {
 
     private lateinit var navigation: BottomNavigationView
     private lateinit var binding: FragmentDetailsBinding
-    private var newsItem: NewsView? = null
 
     @Inject
     lateinit var phoneAdapter: PhoneAdapter
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val detailsViewModel: DetailsScreenViewModel by activityViewModels { viewModelFactory }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,7 +38,13 @@ class DetailsScreenFragment : Fragment() {
     ): View {
         binding = FragmentDetailsBinding.inflate(inflater)
         navigation = activity?.findViewById(R.id.navView)!!
-        return binding.root
+        return ComposeView(requireContext()).apply {
+            setContent {
+                RepoTheme {
+                    DetailsScreen(viewModel = detailsViewModel)
+                }
+            }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -38,46 +52,19 @@ class DetailsScreenFragment : Fragment() {
 
         appComponent().inject(this)
         initParcelableData()
-        configureToolBar()
-        initDetailsViewContent()
-        initAdapterContent()
-        configureRecyclerView()
+        setNavigationListeners()
     }
 
-    private fun initAdapterContent() {
-        phoneAdapter.phoneNumbers = newsItem!!.phoneNumbers!!
-    }
-
-    private fun configureRecyclerView() {
-        binding.apply {
-            phoneRV.layoutManager = LinearLayoutManager(requireContext())
-            phoneRV.adapter = phoneAdapter
-        }
-    }
-
-    private fun initDetailsViewContent() {
-        binding.apply {
-            detailsTitle.text = newsItem!!.title
-            detailsDate.text = newsItem!!.daysLeftText
-            detailsOrganization.text = newsItem!!.organization
-            detailsLocation.text = newsItem!!.location
-            detailsDescription1.text = newsItem!!.description
-            detailsDescription2.text = newsItem!!.subDescription
+    private fun setNavigationListeners() {
+        detailsViewModel.closeDetails.observe(viewLifecycleOwner) {
+            if (it) {
+                parentFragmentManager.popBackStack()
+            }
         }
     }
 
     private fun initParcelableData() {
-        newsItem = arguments?.getParcelable(NEWS_ITEM_KEY)!!
-    }
-
-    private fun configureToolBar() {
-        binding.toolBar.apply {
-            title = newsItem?.title ?: TITLE_TEMPLATE
-            setNavigationIcon(R.drawable.ic_arrow_back)
-            setNavigationOnClickListener {
-                parentFragmentManager.popBackStack()
-            }
-        }
+        detailsViewModel.obtainIntent(DetailsIntent.InitDetailsDataIntent(newsView = arguments?.getParcelable(NEWS_ITEM_KEY)!!))
     }
 
     override fun onPause() {
@@ -93,7 +80,6 @@ class DetailsScreenFragment : Fragment() {
     }
 
     companion object {
-        private const val TITLE_TEMPLATE = "Title"
         private const val NEWS_ITEM_KEY = "newsItemKey"
 
         @JvmStatic
