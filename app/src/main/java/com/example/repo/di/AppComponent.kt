@@ -28,6 +28,7 @@ import javax.inject.Singleton
         FileSourceBindModule::class,
         ContextBindModule::class,
         ModelMapperModule::class,
+        ModelViewMapperModule::class,
         UseCaseModule::class
     ]
 )

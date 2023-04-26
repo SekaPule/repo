@@ -1,8 +1,9 @@
 package com.example.auth_feature.presentation.vm
 
-import com.example.auth_feature.interactor.model.User
-
 sealed class AuthIntent {
 
-    data class AuthValidateIntent(val user: User) : AuthIntent()
+    data class EmailChangedIntent(val email: String) : AuthIntent()
+    data class PasswordChangedIntent(val password: String) : AuthIntent()
+    object LoginIntent : AuthIntent()
+    object CloseIntent : AuthIntent()
 }

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.auth_feature.presentation.vm.AuthScreenViewModel
 import com.example.categories_feature.presentation.vm.CategoriesScreenViewModel
+import com.example.repo.presentation.details.vm.DetailsScreenViewModel
 import com.example.repo.presentation.newslist.viewmodel.NewsScreenViewModel
 import com.example.search_feature.presentation.vm.SearchScreenViewModel
 import dagger.Binds
@@ -37,6 +38,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(SearchScreenViewModel::class)
     abstract fun bindSearchScreenViewModel(view: SearchScreenViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(DetailsScreenViewModel::class)
+    abstract fun bindDetailsViewModel(view: DetailsScreenViewModel): ViewModel
 
     @Binds
     abstract fun bindViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory
