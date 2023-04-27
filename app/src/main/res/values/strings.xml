@@ -56,4 +56,10 @@
     <string name="invite_to_search_text">Напишите в строке поиска название мероприятия или ключевые слова.</string>
     <string name="invite_to_search_example_label">Например,</string>
     <string name="invite_to_search_example">мастер-класс, помощь</string>
+    <string name="choose_money_lable">Выберите размер пожертвования</string>
+    <string name="input_money_lable">или введите нужную сумму</string>
+    <string name="input_money_placeholder">Введите сумму</string>
+    <string name="choose_money_header">Спасибо за решение помочь!</string>
+    <string name="dialog_dismiss_btn_text">Отмена</string>
+    <string name="dialog_transact_btn_text">Перевести</string>
 </resources>

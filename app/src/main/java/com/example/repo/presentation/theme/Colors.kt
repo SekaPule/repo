@@ -13,6 +13,7 @@ data class Colors(
     val lightGreyTwo: Color,
     val grey: Color,
     val black60: Color,
+    val black87: Color,
     val offWhite: Color,
     val maccaronyAndCheese: Color
 )
@@ -28,6 +29,7 @@ val lightPalette = Colors(
     lightGreyTwo = Color(0xFFe8eded),
     grey = Color(0xFF94998a),
     black60 = Color(0xFF99000000),
+    black87 = Color(0xFFde000000),
     offWhite = Color(0xFFFFFFFd),
-    maccaronyAndCheese = Color(0xFFF2B630)
+    maccaronyAndCheese = Color(0xFFF2B630),
 )
