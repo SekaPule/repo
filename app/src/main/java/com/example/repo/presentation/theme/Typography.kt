@@ -9,12 +9,10 @@ import com.example.repo.R
 
 data class Typography(
     val textStyle2: TextStyle,
-    val textStyle10: TextStyle,
-    val textStyle3: TextStyle,
-    val textFieldPlaceholder: TextStyle,
     val textStyle17: TextStyle,
     val textStyle6: TextStyle,
-    val textNavigation: TextStyle
+    val textDialogHeader: TextStyle,
+    val textDialogButton: TextStyle
 )
 
 val OfficinaFont = FontFamily(Font(R.font.officina_sans))
@@ -25,15 +23,6 @@ val customTypography = Typography(
         fontWeight = FontWeight.Bold,
         fontSize = 21.sp
     ),
-    textStyle10 = TextStyle(
-        fontSize = 14.sp
-    ),
-    textStyle3 = TextStyle(
-        fontSize = 12.sp
-    ),
-    textFieldPlaceholder = TextStyle(
-        fontSize = 16.sp
-    ),
     textStyle17 = TextStyle(
         fontSize = 16.sp,
         fontWeight = FontWeight.Medium,
@@ -43,7 +32,12 @@ val customTypography = Typography(
         fontFamily = OfficinaFont,
         lineHeight = 23.sp
     ),
-    textNavigation = TextStyle(
-        fontSize = 10.sp,
+    textDialogHeader = TextStyle(
+        fontSize = 20.sp,
+        fontWeight = FontWeight.Medium
+    ),
+    textDialogButton = TextStyle(
+        fontSize = 14.sp,
+        fontWeight = FontWeight.Medium
     )
 )
