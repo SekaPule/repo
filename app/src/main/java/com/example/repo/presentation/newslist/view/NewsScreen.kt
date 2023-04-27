@@ -1,7 +1,9 @@
 package com.example.repo.presentation.newslist.view
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
@@ -39,15 +41,13 @@ fun NewsScreen(
                     actionIconContentColor = AppTheme.colors.white
                 ),
                 actions = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_filter),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .clickable {
-                                viewModel.obtainIntent(NewsIntent.FilterNewsIntent)
-                            }
-                            .padding(end = dimensionResource(id = R.dimen.spacing_xs))
-                    )
+                    IconButton(onClick = { viewModel.obtainIntent(NewsIntent.FilterNewsIntent) }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_filter),
+                            contentDescription = null,
+                            modifier = Modifier.padding(end = dimensionResource(id = R.dimen.spacing_xs))
+                        )
+                    }
                 }
             )
         },
