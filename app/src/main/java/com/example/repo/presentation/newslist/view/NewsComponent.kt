@@ -16,6 +16,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.repo.R
 import com.example.repo.presentation.theme.AppTheme
 import com.example.search_feature.presentation.model.NewsView
@@ -23,7 +24,8 @@ import com.example.search_feature.presentation.model.NewsView
 @Composable
 fun NewsComponent(
     newsView: NewsView,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Card(
         modifier = Modifier
@@ -49,10 +51,11 @@ fun NewsComponent(
                 )
 
                 if (!newsView.isChecked) {
-                    Row(modifier = Modifier
-                        .size(size = 20.dp)
-                        .background(color = AppTheme.colors.maccaronyAndCheese)
-                    ){}
+                    Row(
+                        modifier = Modifier
+                            .size(size = 20.dp)
+                            .background(color = AppTheme.colors.maccaronyAndCheese)
+                    ) {}
                 }
             }
 
@@ -72,7 +75,8 @@ fun NewsComponent(
             )
 
             Text(
-                text = newsView.titleDescription ?: "", style = AppTheme.typography.textStyle10,
+                text = newsView.titleDescription ?: "",
+                fontSize = 14.sp,
                 color = AppTheme.colors.black70,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(
@@ -103,7 +107,7 @@ fun NewsComponent(
 
                 Text(
                     text = newsView.daysLeftText ?: "",
-                    style = AppTheme.typography.textStyle3,
+                    fontSize = 12.sp,
                     color = AppTheme.colors.white
                 )
             }
