@@ -1,6 +1,7 @@
 package com.example.repo.presentation.newslist.viewmodel
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.repo.domain.interactor.InitDataForCurrentSessionUseCase
@@ -8,7 +9,8 @@ import com.example.search_feature.interactor.GetNewsUseCase
 import com.example.search_feature.presentation.mapper.NewsViewMapper
 import com.example.search_feature.presentation.model.NewsView
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,9 +23,22 @@ class NewsScreenViewModel @Inject constructor(
     private val _notCheckedNewsCounter = MutableStateFlow(0)
     val notCheckedNewsCounter = _notCheckedNewsCounter.asStateFlow()
 
+    private val _openDetails = SingleLiveEvent<NewsView>()
+    val openDetails: LiveData<NewsView> = _openDetails
+
+    private val _openFilters = SingleLiveEvent<Boolean>()
+    val openFilters: LiveData<Boolean> = _openFilters
+
     private var _news = MutableStateFlow(emptyList<NewsView>())
     val news = _news.asStateFlow()
     var allNews = emptyList<NewsView>()
+
+    fun obtainIntent(newsIntent: NewsIntent) {
+        when (newsIntent) {
+            is NewsIntent.DetailsNewsIntent -> _openDetails.value = newsIntent.newsView
+            is NewsIntent.FilterNewsIntent -> _openFilters.value = true
+        }
+    }
 
     fun initNews() {
         viewModelScope.launch(Dispatchers.IO) {

@@ -1,7 +1,7 @@
 package com.example.auth_feature.presentation.vm
 
-sealed class AuthState {
-
-    object ValidationSuccess : AuthState()
-    object ValidationError : AuthState()
-}
+data class AuthState(
+    val email: String = "",
+    val password: String = "",
+    val isValid: Boolean = false
+)

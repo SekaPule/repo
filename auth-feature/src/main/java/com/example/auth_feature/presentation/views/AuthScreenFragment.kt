@@ -5,29 +5,22 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.ui.platform.ComposeView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
-import com.example.auth_feature.R
 import com.example.auth_feature.databinding.FragmentAuthScreenBinding
 import com.example.auth_feature.di.AuthFeatureComponentViewModel
-import com.example.auth_feature.interactor.model.User
-import com.example.auth_feature.presentation.vm.AuthIntent
+import com.example.auth_feature.presentation.theme.RepoTheme
 import com.example.auth_feature.presentation.vm.AuthScreenViewModel
-import com.example.auth_feature.presentation.vm.AuthState
-import com.jakewharton.rxbinding4.widget.textChangeEvents
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.disposables.Disposable
 import javax.inject.Inject
 
 
 class AuthScreenFragment : Fragment() {
 
     private lateinit var binding: FragmentAuthScreenBinding
-    private lateinit var disposable: Disposable
-    private lateinit var userObservable: Observable<User>
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -47,69 +40,37 @@ class AuthScreenFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentAuthScreenBinding.inflate(inflater)
-        return binding.root
+        return ComposeView(requireContext()).apply {
+            setContent {
+                RepoTheme {
+                    AuthScreen(viewModel = authScreeViewModel)
+                }
+            }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        configureToolBar()
-        setObservers()
-        setViewListeners()
+        navigationListeners()
     }
 
-    private fun configureToolBar() {
-        binding.toolBar.title = getString(R.string.auth_title)
-        binding.toolBar.setNavigationIcon(R.drawable.ic_arrow_back)
-    }
-
-    private fun setViewListeners() {
-        binding.toolBar.setNavigationOnClickListener {
-            requireActivity().finish()
+    private fun navigationListeners() {
+        authScreeViewModel.isAuthorized.observe(viewLifecycleOwner) { isAuthorized ->
+            if (isAuthorized) {
+                parentFragmentManager.also {
+                    it.setFragmentResult(AUTH_KEY, bundleOf(AUTH_BUNDLE_KEY to true))
+                }
+            }
         }
 
-        binding.authBtn.setOnClickListener {
-            parentFragmentManager.also {
-                it.setFragmentResult(AUTH_KEY, bundleOf(AUTH_BUNDLE_KEY to true))
+        authScreeViewModel.close.observe(viewLifecycleOwner) { close ->
+            if (close) {
+                requireActivity().finish()
             }
         }
     }
 
-    private fun setObservers() {
-        val emailObservable = binding.emailEditText
-            .textChangeEvents()
-            .skipInitialValue()
-            .map { it.text.toString() }
-
-        val passwordObservable = binding.passwordEditText
-            .textChangeEvents()
-            .skipInitialValue()
-            .map { it.text.toString() }
-
-        authScreeViewModel.stateObservable.observe(viewLifecycleOwner) { authState ->
-            updateView(state = authState)
-        }
-
-        userObservable = Observable.combineLatest(emailObservable, passwordObservable) { s1, s2 ->
-            User(email = s1, password = s2)
-        }
-
-        disposable = userObservable.subscribe { user ->
-            authScreeViewModel.obtainIntent(AuthIntent.AuthValidateIntent(user = user))
-        }
-    }
-
-    private fun updateView(state: AuthState) {
-        when (state) {
-            AuthState.ValidationError -> binding.authBtn.isEnabled = false
-            AuthState.ValidationSuccess -> binding.authBtn.isEnabled = true
-        }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        disposable.dispose()
-    }
 
     companion object {
         private const val AUTH_KEY = "authKey"
