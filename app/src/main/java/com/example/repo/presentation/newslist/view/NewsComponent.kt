@@ -36,7 +36,7 @@ fun NewsComponent(
             containerColor = AppTheme.colors.white
         )
     ) {
-        Column(modifier = Modifier.fillMaxWidth()) {
+        Column(modifier = modifier.fillMaxWidth()) {
             Box(
                 Modifier
                     .fillMaxSize(),
@@ -79,7 +79,7 @@ fun NewsComponent(
                 fontSize = 14.sp,
                 color = AppTheme.colors.black70,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(
+                modifier = modifier.padding(
                     start = 0.dp,
                     top = dimensionResource(id = R.dimen.small_content_spacing),
                     end = 0.dp,
@@ -97,7 +97,7 @@ fun NewsComponent(
                 Image(
                     painter = painterResource(id = R.drawable.ic_calendar),
                     contentDescription = null,
-                    modifier = Modifier.padding(
+                    modifier = modifier.padding(
                         horizontal = dimensionResource(
                             id = R.dimen.small_content_spacing
                         ),
