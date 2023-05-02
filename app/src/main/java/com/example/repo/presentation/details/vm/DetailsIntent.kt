@@ -12,4 +12,6 @@ sealed class DetailsIntent {
     data class SelectDonationButtonIntent(val donationButtons: DonationButtons): DetailsIntent()
     object ShowDialogIntent: DetailsIntent()
     object HideDialogIntent: DetailsIntent()
+    data class MoneyTextFieldValueChangeIntent(val value: String): DetailsIntent()
+    object ConfirmDonationIntent: DetailsIntent()
 }
