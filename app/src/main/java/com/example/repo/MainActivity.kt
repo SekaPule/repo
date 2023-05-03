@@ -14,11 +14,11 @@ import androidx.lifecycle.lifecycleScope
 import com.example.auth_feature.presentation.views.AuthScreenFragment
 import com.example.categories_feature.presentation.views.CategoriesScreenFragment
 import com.example.repo.data.WorkManagerConfig.DETAILS_ACTION
+import com.example.repo.data.WorkManagerConfig.NEWS_ITEM_KEY_A
 import com.example.repo.databinding.ActivityMainBinding
 import com.example.repo.di.app.MainApplication.Companion.appComponent
 import com.example.repo.presentation.details.views.DetailsScreenFragment
 import com.example.repo.presentation.newslist.view.NewsScreenFragment
-import com.example.repo.presentation.newslist.view.recycler.NewsAdapter
 import com.example.repo.presentation.newslist.viewmodel.NewsScreenViewModel
 import com.example.repo.presentation.profile.views.ProfileScreenFragment
 import com.example.search_feature.presentation.model.NewsView
@@ -59,10 +59,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun setNotifyListener() {
         if (intent.action == DETAILS_ACTION) {
-            Log.e(this.localClassName, "FRAGMENT LOAD")
             val bundle = bundleOf(
                 NEWS_ITEM_KEY to Gson().fromJson(
-                    intent.getStringExtra(NEWS_ITEM_KEY),
+                    intent.getStringExtra(NEWS_ITEM_KEY_A),
                     NewsView::class.java
                 )
             )

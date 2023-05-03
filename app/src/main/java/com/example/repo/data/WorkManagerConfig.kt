@@ -10,7 +10,7 @@ object WorkManagerConfig {
     const val UNIQUE_WORK_NAME = "unique work"
     const val DETAILS_ACTION = "DETAILS_ACTION"
     const val REMIND_ACTION = "REMIND_ACTION"
-    const val NEWS_ITEM_KEY = "NEWS_ITEM_KEY"
+    const val NEWS_ITEM_KEY_A = "NEWS_ITEM_KEY"
     const val NEWS_ITEM_KEY_B = "NEWS_ITEM_KEY_B"
     const val NEWS_ITEM_TITLE = "NEWS_ITEM_TITLE"
     const val DETAILS_ITEM_DATA2 = "DETAILS_ITEM_DATA2"
