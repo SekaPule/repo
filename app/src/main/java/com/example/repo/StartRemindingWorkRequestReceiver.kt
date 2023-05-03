@@ -3,7 +3,6 @@ package com.example.repo
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import androidx.core.app.NotificationManagerCompat
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
@@ -19,11 +18,10 @@ import java.util.concurrent.TimeUnit
 
 class StartRemindingWorkRequestReceiver : BroadcastReceiver() {
 
-    override fun onReceive(p0: Context, p1: Intent) {
-        val newsViewString: String? = p1.getStringExtra(NEWS_ITEM_KEY_B)
-        val title = p1.getStringExtra(NEWS_ITEM_TITLE)
-        Log.e(this.javaClass.simpleName, "BR$title")
-        val workManager = p0.let { WorkManager.getInstance(it) }
+    override fun onReceive(context: Context, intent: Intent) {
+        val newsViewString: String? = intent.getStringExtra(NEWS_ITEM_KEY_B)
+        val title = intent.getStringExtra(NEWS_ITEM_TITLE)
+        val workManager = context.let { WorkManager.getInstance(it) }
         val donateReminder = OneTimeWorkRequestBuilder<DonationRemindWorker>()
             .setInputData(
             workDataOf(
@@ -33,7 +31,7 @@ class StartRemindingWorkRequestReceiver : BroadcastReceiver() {
         )
             .setInitialDelay(30, TimeUnit.MINUTES)
 
-        p0.apply {
+        context.apply {
             NotificationManagerCompat.from(this)
                 .cancel(1)
         }
