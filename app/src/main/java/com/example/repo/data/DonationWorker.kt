@@ -6,8 +6,6 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.os.Build
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.os.bundleOf
@@ -22,7 +20,7 @@ import com.example.repo.data.WorkManagerConfig.DETAILS_TITLE
 import com.example.repo.data.WorkManagerConfig.DONATION_NOTIFICATION_CHANNEL_ID
 import com.example.repo.data.WorkManagerConfig.DONATION_NOTIFICATION_CHANNEL_NAME
 import com.example.repo.data.WorkManagerConfig.DONATION_VALUE
-import com.example.repo.data.WorkManagerConfig.NEWS_ITEM_KEY
+import com.example.repo.data.WorkManagerConfig.NEWS_ITEM_KEY_A
 import com.example.repo.data.WorkManagerConfig.NEWS_ITEM_KEY_B
 import com.example.repo.data.WorkManagerConfig.NEWS_ITEM_TITLE
 import com.example.repo.data.WorkManagerConfig.REMIND_ACTION
@@ -34,7 +32,6 @@ class DonationWorker(private val context: Context, workerParams: WorkerParameter
         val detailsTitle = inputData.getString(DETAILS_TITLE) ?: return Result.failure()
         val donationValue = inputData.getString(DONATION_VALUE) ?: return Result.failure()
         setNotification(title = detailsTitle, text = donationValue)
-        Log.e("DONATION_WORKEER", "WOOOOORK DO")
 
         return Result.success()
     }
@@ -46,23 +43,20 @@ class DonationWorker(private val context: Context, workerParams: WorkerParameter
     private fun createNotification(title: String, text: String): Notification {
         val newsViewJson = inputData.getString(DETAILS_ITEM_JSON)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel =
-                NotificationChannel(
-                    DONATION_NOTIFICATION_CHANNEL_ID,
-                    DONATION_NOTIFICATION_CHANNEL_NAME,
-                    NotificationManager.IMPORTANCE_DEFAULT
-                )
-            val notificationManager =
-                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager?
+        val channel = NotificationChannel(
+                DONATION_NOTIFICATION_CHANNEL_ID,
+                DONATION_NOTIFICATION_CHANNEL_NAME,
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
+        val notificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager?
 
-            notificationManager?.createNotificationChannel(channel)
-        }
+        notificationManager?.createNotificationChannel(channel)
 
         val intent = Intent(context, MainActivity::class.java).apply {
             action = DETAILS_ACTION
             val bundle = bundleOf(
-                NEWS_ITEM_KEY to newsViewJson
+                NEWS_ITEM_KEY_A to newsViewJson
             )
             putExtras(bundle)
         }
