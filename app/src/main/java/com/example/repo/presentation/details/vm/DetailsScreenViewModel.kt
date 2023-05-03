@@ -1,7 +1,6 @@
 package com.example.repo.presentation.details.vm
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -60,22 +59,28 @@ class DetailsScreenViewModel @Inject constructor(context: Context) : ViewModel()
             DetailsIntent.ConfirmDonationIntent -> {
                 startWorkerRequest(
                     newsView = detailsData.value!!,
-                    donationValue = _viewState.value?.moneyTextFieldValue?.toInt() ?: 0,
+                    donationValue = (_viewState.value?.moneyTextFieldValue?.toFloat() ?: 0f),
                 )
                 _viewState.postValue(_viewState.value!!.copy(isShowDialog = false))
             }
         }
     }
 
-    private fun validateMoneyTextField(value: String): Boolean =
-        if (value == "") {
-            false
-        } else {
-            value.toInt() in MONEY_LOWEST_BOUND..MONEY_HIGHEST_BOUND
+    private fun validateMoneyTextField(value: String): Boolean {
+        try {
+            value.toFloat().let {
+                if(it > 0){
+                    return it in MONEY_LOWEST_BOUND..MONEY_HIGHEST_BOUND
+                }else{
+                    return false
+                }
+            }
+        }catch (e: Throwable) {
+            return false
         }
+    }
 
-    private fun startWorkerRequest(newsView: NewsView, donationValue: Int) {
-        Log.e(this.javaClass.toString(), "AAAAAAAAAAAAAAAAAAA")
+    private fun startWorkerRequest(newsView: NewsView, donationValue: Float) {
         val donate = OneTimeWorkRequestBuilder<DonationWorker>()
             .setInputData(
                 workDataOf(
@@ -100,7 +105,7 @@ class DetailsScreenViewModel @Inject constructor(context: Context) : ViewModel()
     }
 
     companion object {
-        private const val MONEY_LOWEST_BOUND = 1
-        private const val MONEY_HIGHEST_BOUND = 9_999_999
+        private const val MONEY_LOWEST_BOUND = 1f
+        private const val MONEY_HIGHEST_BOUND = 9_999_999f
     }
 }
