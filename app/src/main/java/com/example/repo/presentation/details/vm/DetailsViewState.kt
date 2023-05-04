@@ -8,5 +8,7 @@ data class DetailsViewState(
 //    val detailsData: NewsView,
     val selectedBottomNavigationItem: BottomIcons = BottomIcons.CLOTH,
     val isShowDialog: Boolean = false,
-    val selectedDonationsButton: DonationButtons = DonationButtons.MIN
+    val selectedDonationsButton: DonationButtons = DonationButtons.MIN,
+    val moneyTextFieldValue: String = selectedDonationsButton.money.toString(),
+    val isTransactButtonEnabled: Boolean = true
 )

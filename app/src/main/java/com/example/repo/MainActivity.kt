@@ -6,19 +6,25 @@ import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.auth_feature.presentation.views.AuthScreenFragment
 import com.example.categories_feature.presentation.views.CategoriesScreenFragment
+import com.example.repo.data.WorkManagerConfig.DETAILS_ACTION
+import com.example.repo.data.WorkManagerConfig.NEWS_ITEM_KEY_A
 import com.example.repo.databinding.ActivityMainBinding
 import com.example.repo.di.app.MainApplication.Companion.appComponent
+import com.example.repo.presentation.details.views.DetailsScreenFragment
 import com.example.repo.presentation.newslist.view.NewsScreenFragment
 import com.example.repo.presentation.newslist.viewmodel.NewsScreenViewModel
 import com.example.repo.presentation.profile.views.ProfileScreenFragment
+import com.example.search_feature.presentation.model.NewsView
 import com.example.search_feature.presentation.views.SearchScreenFragment
 import com.google.android.material.badge.BadgeDrawable
+import com.google.gson.Gson
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -49,6 +55,22 @@ class MainActivity : AppCompatActivity() {
         setBadgeChangeListener()
         setFragmentResultListeners()
         setAuthCheck()
+        setNotifyListener()
+    }
+
+    private fun setNotifyListener() {
+        if (intent.action == DETAILS_ACTION) {
+            val bundle = bundleOf(
+                NEWS_ITEM_KEY to Gson().fromJson(
+                    intent.getStringExtra(NEWS_ITEM_KEY_A),
+                    NewsView::class.java
+                )
+            )
+            val fragment = DetailsScreenFragment.newInstance()
+            fragment.arguments = bundle
+
+            loadFragment(fragment = fragment)
+        }
     }
 
     private fun setAuthCheck() {
@@ -235,5 +257,6 @@ class MainActivity : AppCompatActivity() {
         private const val CHECKED_FLAG_KEY = "checkedFlagKey"
         private const val AUTH_KEY = "authKey"
         private const val AUTH_BUNDLE_KEY = "authBundleKey"
+        private const val NEWS_ITEM_KEY = "newsItemKey"
     }
 }

@@ -154,8 +154,10 @@ fun DetailsScreen(
 
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                 IconButton(onClick = {
-                                    viewModel.apply {
-                                        obtainIntent(DetailsIntent.SelectBottomItemIntent(BottomIcons.MONEY))
+                                    viewModel.run {
+                                        obtainIntent(
+                                            DetailsIntent.SelectBottomItemIntent(BottomIcons.MONEY)
+                                        )
                                         obtainIntent(DetailsIntent.ShowDialogIntent)
                                     }
                                 }) {
@@ -179,6 +181,15 @@ fun DetailsScreen(
             }
         ) { contentPadding ->
             HelpMoneyDialog(
+                moneyValue = moneyTextFieldValue,
+                isTransactButtonEnabled = isTransactButtonEnabled,
+                moneyTextFieldValueChange = { value: String ->
+                    viewModel.obtainIntent(
+                        DetailsIntent.MoneyTextFieldValueChangeIntent(
+                            value
+                        )
+                    )
+                },
                 isShowDialog = isShowDialog,
                 setShowDialog = { viewModel.obtainIntent(DetailsIntent.HideDialogIntent) },
                 selectedDonationButton = selectedDonationsButton,
@@ -186,7 +197,8 @@ fun DetailsScreen(
                     viewModel.obtainIntent(
                         DetailsIntent.SelectDonationButtonIntent(donationButtons)
                     )
-                }
+                },
+                confirmDonation = { viewModel.obtainIntent(DetailsIntent.ConfirmDonationIntent) }
             )
 
             LazyColumn(

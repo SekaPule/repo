@@ -13,7 +13,6 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -23,12 +22,18 @@ import com.example.repo.presentation.theme.AppTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HelpMoneyDialog(
+    moneyValue: String,
+    isTransactButtonEnabled: Boolean,
+    moneyTextFieldValueChange: (String) -> Unit,
     isShowDialog: Boolean,
     setShowDialog: () -> Unit,
     selectedDonationButton: DonationButtons,
     setSelectedButton: (donationButton: DonationButtons) -> Unit,
+    confirmDonation: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val moneyTextFieldMaxLength = 9
+
     if (isShowDialog) {
         AlertDialog(
             containerColor = AppTheme.colors.white,
@@ -38,9 +43,41 @@ fun HelpMoneyDialog(
                     text = stringResource(id = R.string.choose_money_header),
                     style = AppTheme.typography.textDialogHeader,
                     color = AppTheme.colors.black87,
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center
                 )
+            },
+            onDismissRequest = { setShowDialog.invoke() },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        confirmDonation.invoke()
+                    },
+                    colors = ButtonDefaults.textButtonColors(
+                        containerColor = Color.Transparent,
+                        contentColor = AppTheme.colors.lightGreen
+                    ),
+                    enabled = isTransactButtonEnabled
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.dialog_transact_btn_text).uppercase(),
+                        style = AppTheme.typography.textDialogButton
+                    )
+                }
+            },
+            dismissButton = {
+                Button(
+                    onClick = { setShowDialog.invoke() },
+                    colors = ButtonDefaults.textButtonColors(
+                        containerColor = Color.Transparent,
+                        contentColor = AppTheme.colors.lightGreen
+                    )
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.dialog_dismiss_btn_text).uppercase(),
+                        style = AppTheme.typography.textDialogButton
+                    )
+                }
             },
             text = {
                 Column(
@@ -53,7 +90,6 @@ fun HelpMoneyDialog(
                         fontSize = 16.sp,
                         color = AppTheme.colors.black60
                     )
-
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -61,9 +97,10 @@ fun HelpMoneyDialog(
                                 top = dimensionResource(id = R.dimen.small_content_spacing),
                                 bottom = dimensionResource(id = R.dimen.spacing_l)
                             ),
+                        horizontalArrangement = Arrangement.Center
                     ) {
+
                         Button(
-                            modifier = Modifier.fillMaxWidth(0.25f),
                             onClick = { setSelectedButton.invoke(DonationButtons.MIN) },
                             colors = if (selectedDonationButton == DonationButtons.MIN) {
                                 ButtonDefaults.outlinedButtonColors(
@@ -80,16 +117,18 @@ fun HelpMoneyDialog(
                                 width = 0.5.dp,
                                 color = AppTheme.colors.lightGreen
                             ),
-                            shape = RectangleShape
+                            shape = RectangleShape,
+                            contentPadding = PaddingValues(0.dp)
                         ) {
                             Text(
-                                text = "500",
+                                text = DonationButtons.MIN.money.toString() + stringResource(id = R.string.currency_postfix),
                                 style = AppTheme.typography.textDialogButton
                             )
                         }
 
+
+
                         Button(
-                            modifier = Modifier.fillMaxWidth(0.25f),
                             onClick = { setSelectedButton.invoke(DonationButtons.LOW) },
                             colors = if (selectedDonationButton == DonationButtons.LOW) {
                                 ButtonDefaults.outlinedButtonColors(
@@ -106,16 +145,19 @@ fun HelpMoneyDialog(
                                 width = 0.5.dp,
                                 color = AppTheme.colors.lightGreen
                             ),
-                            shape = RectangleShape
+                            shape = RectangleShape,
+                            contentPadding = PaddingValues(0.dp)
                         ) {
                             Text(
-                                text = "1000",
+                                text = DonationButtons.LOW.money.toString() + stringResource(id = R.string.currency_postfix),
                                 style = AppTheme.typography.textDialogButton
                             )
                         }
 
+
+
+
                         Button(
-                            modifier = Modifier.fillMaxWidth(0.25f),
                             onClick = { setSelectedButton.invoke(DonationButtons.MID) },
                             colors = if (selectedDonationButton == DonationButtons.MID) {
                                 ButtonDefaults.outlinedButtonColors(
@@ -132,16 +174,17 @@ fun HelpMoneyDialog(
                                 width = 0.5.dp,
                                 color = AppTheme.colors.lightGreen
                             ),
-                            shape = RectangleShape
+                            shape = RectangleShape,
+                            contentPadding = PaddingValues(0.dp)
                         ) {
                             Text(
-                                text = "1500",
+                                text = DonationButtons.MID.money.toString() + stringResource(id = R.string.currency_postfix),
                                 style = AppTheme.typography.textDialogButton
                             )
                         }
 
+
                         Button(
-                            modifier = Modifier.fillMaxWidth(0.25f),
                             onClick = { setSelectedButton.invoke(DonationButtons.HIGH) },
                             colors = if (selectedDonationButton == DonationButtons.HIGH) {
                                 ButtonDefaults.outlinedButtonColors(
@@ -158,14 +201,17 @@ fun HelpMoneyDialog(
                                 width = 0.5.dp,
                                 color = AppTheme.colors.lightGreen
                             ),
-                            shape = RectangleShape
+                            shape = RectangleShape,
+                            contentPadding = PaddingValues(0.dp)
                         ) {
                             Text(
-                                text = "2000",
+                                text = DonationButtons.HIGH.money.toString() + stringResource(id = R.string.currency_postfix),
                                 style = AppTheme.typography.textDialogButton
                             )
                         }
                     }
+
+
 
                     Text(
                         text = stringResource(id = R.string.input_money_lable),
@@ -174,17 +220,21 @@ fun HelpMoneyDialog(
                     )
 
                     TextField(
-                        value = TextFieldValue(),
+                        value = moneyValue,
                         placeholder = {
                             Text(
                                 text = stringResource(id = R.string.input_money_placeholder),
                                 fontSize = 16.sp,
                                 color = AppTheme.colors.black38,
-                                modifier = Modifier.fillMaxWidth(),
+                                modifier = modifier.fillMaxWidth(),
                                 textAlign = TextAlign.Center
                             )
                         },
-                        onValueChange = {},
+                        onValueChange = {
+                            if (it.length <= moneyTextFieldMaxLength) {
+                                moneyTextFieldValueChange.invoke(it)
+                            }
+                        },
                         modifier = Modifier
                             .fillMaxWidth()
                             .align(Alignment.CenterHorizontally),
@@ -199,36 +249,7 @@ fun HelpMoneyDialog(
                         )
                     )
                 }
-            },
-            onDismissRequest = { setShowDialog.invoke() },
-            confirmButton = {
-                Button(
-                    onClick = { setShowDialog.invoke() },
-                    colors = ButtonDefaults.textButtonColors(
-                        containerColor = Color.Transparent,
-                        contentColor = AppTheme.colors.lightGreen
-                    )
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.dialog_dismiss_btn_text).uppercase(),
-                        style = AppTheme.typography.textDialogButton
-                    )
-                }
-            },
-            dismissButton = {
-                Button(
-                    onClick = { setShowDialog.invoke() },
-                    colors = ButtonDefaults.textButtonColors(
-                        containerColor = Color.Transparent,
-                        contentColor = AppTheme.colors.lightGreen
-                    )
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.dialog_transact_btn_text).uppercase(),
-                        style = AppTheme.typography.textDialogButton
-                    )
-                }
-            }
-        )
+            })
     }
 }
+

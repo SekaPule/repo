@@ -62,4 +62,9 @@
     <string name="choose_money_header">Спасибо за решение помочь!</string>
     <string name="dialog_dismiss_btn_text">Отмена</string>
     <string name="dialog_transact_btn_text">Перевести</string>
+    <string name="currency_postfix"> ₽</string>
+    <string name="thanks_for_donation">Спасибо, что пожертвовали </string>
+    <string name="invite_for_donate"> ₽! Будем очень признательны, если вы сможете пожертвовать еще больше.</string>
+    <string name="remind_later_btn_text">Напомнить позже</string>
+    <string name="remind_invite_for_donation">Напоминаем, что мы будем очень признательны, если вы сможете пожертвовать еще больше.</string>
 </resources>
