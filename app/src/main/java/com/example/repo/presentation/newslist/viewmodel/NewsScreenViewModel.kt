@@ -1,6 +1,7 @@
 package com.example.repo.presentation.newslist.viewmodel
 
 import android.util.Log
+import androidx.annotation.OpenForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,7 +15,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class NewsScreenViewModel @Inject constructor(
+@OpenForTesting
+open class NewsScreenViewModel @Inject constructor(
     private val getNewsUseCase: GetNewsUseCase,
     private val initDataForCurrentSessionUseCase: InitDataForCurrentSessionUseCase,
     private val newsViewMapper: NewsViewMapper
@@ -30,7 +32,7 @@ class NewsScreenViewModel @Inject constructor(
     val openFilters: LiveData<Boolean> = _openFilters
 
     private var _news = MutableStateFlow(emptyList<NewsView>())
-    val news = _news.asStateFlow()
+    open val news = _news.asStateFlow()
     var allNews = emptyList<NewsView>()
 
     fun obtainIntent(newsIntent: NewsIntent) {

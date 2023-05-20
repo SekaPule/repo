@@ -16,16 +16,16 @@ import com.example.search_feature.presentation.model.NewsView
 import com.google.gson.Gson
 import javax.inject.Inject
 
-class DetailsScreenViewModel @Inject constructor(context: Context) : ViewModel() {
+open class DetailsScreenViewModel @Inject constructor(context: Context) : ViewModel() {
 
     private val _closeDetails = SingleLiveEvent<Boolean>()
     val closeDetails: LiveData<Boolean> = _closeDetails
 
     private val _viewState = MutableLiveData<DetailsViewState>(DetailsViewState())
-    val viewState: LiveData<DetailsViewState> = _viewState
+    open val viewState: LiveData<DetailsViewState> = _viewState
 
     private val _detailsData = MutableLiveData<NewsView>()
-    val detailsData: LiveData<NewsView> = _detailsData
+    open val detailsData: LiveData<NewsView> = _detailsData
 
     private val workManager = WorkManager.getInstance(context.applicationContext)
 
@@ -69,13 +69,13 @@ class DetailsScreenViewModel @Inject constructor(context: Context) : ViewModel()
     private fun validateMoneyTextField(value: String): Boolean {
         try {
             value.toFloat().let {
-                if(it > 0){
+                if (it > 0) {
                     return it in MONEY_LOWEST_BOUND..MONEY_HIGHEST_BOUND
-                }else{
+                } else {
                     return false
                 }
             }
-        }catch (e: Throwable) {
+        } catch (e: Throwable) {
             return false
         }
     }
