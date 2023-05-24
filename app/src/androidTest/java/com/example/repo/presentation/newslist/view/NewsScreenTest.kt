@@ -2,7 +2,7 @@ package com.example.repo.presentation.newslist.view
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performScrollTo
 import com.example.repo.presentation.newslist.viewmodel.NewsScreenViewModel
 import com.example.repo.presentation.theme.RepoTheme
@@ -77,11 +77,10 @@ class NewsScreenTest {
             }
         }
 
-        listOf(
-            "Спонсоры отремонтируют школу-интернат",
-            "Спонсоры отремонтируют школу-интернат2"
-        ).forEach { text ->
-            rule.onNodeWithText(text).performScrollTo().assertIsDisplayed()
+        viewModel.news.value.forEach { newsView ->
+            rule.onNodeWithTag("NEWS_ITEM_${newsView.id}_TAG")
+                .performScrollTo()
+                .assertIsDisplayed()
         }
     }
 }

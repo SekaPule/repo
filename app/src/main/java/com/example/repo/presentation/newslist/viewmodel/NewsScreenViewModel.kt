@@ -9,6 +9,7 @@ import com.example.repo.domain.interactor.InitDataForCurrentSessionUseCase
 import com.example.search_feature.interactor.GetNewsUseCase
 import com.example.search_feature.presentation.mapper.NewsViewMapper
 import com.example.search_feature.presentation.model.NewsView
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,7 +20,8 @@ import javax.inject.Inject
 open class NewsScreenViewModel @Inject constructor(
     private val getNewsUseCase: GetNewsUseCase,
     private val initDataForCurrentSessionUseCase: InitDataForCurrentSessionUseCase,
-    private val newsViewMapper: NewsViewMapper
+    private val newsViewMapper: NewsViewMapper,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : ViewModel() {
 
     private val _notCheckedNewsCounter = MutableStateFlow(0)
@@ -43,7 +45,7 @@ open class NewsScreenViewModel @Inject constructor(
     }
 
     fun initNews() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             getNewsUseCase.execute().collect { newsList ->
                 allNews = newsList.map { domainModel ->
                     newsViewMapper.mapFromDomainModel(type = domainModel)
@@ -56,7 +58,7 @@ open class NewsScreenViewModel @Inject constructor(
     }
 
     fun initData() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             initDataForCurrentSessionUseCase.execute()
         }
     }

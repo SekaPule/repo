@@ -29,7 +29,8 @@ import javax.inject.Singleton
         ContextBindModule::class,
         ModelMapperModule::class,
         ModelViewMapperModule::class,
-        UseCaseModule::class
+        UseCaseModule::class,
+        CoroutineDispatchersModule::class
     ]
 )
 interface AppComponent : AuthFeatureDeps, CategoriesFeatureDeps, SearchFeatureDeps {

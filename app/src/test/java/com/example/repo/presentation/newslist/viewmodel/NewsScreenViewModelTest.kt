@@ -10,8 +10,7 @@ import com.example.search_feature.presentation.model.NewsView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.setMain
+import kotlinx.coroutines.test.*
 import kotlinx.datetime.*
 import org.junit.Before
 import org.junit.Test
@@ -42,7 +41,8 @@ internal class NewsScreenViewModelTest {
         viewModel = NewsScreenViewModel(
             getNewsUseCase = getNewsUseCase,
             initDataForCurrentSessionUseCase = initDataForCurrentSessionUseCase,
-            newsViewMapper = newsViewMapper
+            newsViewMapper = newsViewMapper,
+            ioDispatcher = UnconfinedTestDispatcher(TestCoroutineScheduler())
         )
         ArchTaskExecutor.getInstance().setDelegate(object : TaskExecutor() {
             override fun executeOnDiskIO(runnable: Runnable) {
@@ -136,8 +136,10 @@ internal class NewsScreenViewModelTest {
             emit(testNewsList)
         })
 
-        viewModel.initNews()
-        viewModel.filterNews(filters = testFilters)
+        runBlockingTest {
+            viewModel.initNews()
+            viewModel.filterNews(filters = testFilters)
+        }
 
         val expected = listOf(
             NewsView(

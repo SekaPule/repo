@@ -1,22 +1,24 @@
 package com.example.repo.presentation.details.views
 
-import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onAllNodesWithTag
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.lifecycle.MutableLiveData
+import androidx.test.platform.app.InstrumentationRegistry
 import com.example.repo.presentation.details.vm.DetailsScreenViewModel
-import com.example.repo.presentation.details.vm.DetailsViewState
 import com.example.repo.presentation.theme.RepoTheme
 import com.example.search_feature.presentation.model.NewsView
 import kotlinx.datetime.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.mockito.Mockito.`when`
-import org.mockito.Mockito.mock
-import kotlin.concurrent.thread
+import org.mockito.Mockito.spy
+import org.mockito.junit.MockitoJUnitRunner
 
+@RunWith(MockitoJUnitRunner::class)
 internal class DetailsScreenTest {
 
     private lateinit var viewModel: DetailsScreenViewModel
@@ -26,7 +28,8 @@ internal class DetailsScreenTest {
 
     @Before
     fun before() {
-        viewModel = mock(DetailsScreenViewModel::class.java)
+        viewModel =
+            spy(DetailsScreenViewModel(context = InstrumentationRegistry.getInstrumentation().context))
 
         val mockData = MutableLiveData(
             NewsView(
@@ -48,7 +51,6 @@ internal class DetailsScreenTest {
             )
         )
 
-        `when`(viewModel.viewState).thenReturn(MutableLiveData(DetailsViewState()))
         `when`(viewModel.detailsData).thenReturn(mockData)
     }
 
@@ -60,10 +62,13 @@ internal class DetailsScreenTest {
             }
         }
 
-        rule.onNodeWithText("Помочь деньгами").performClick()
-        thread {
-            Thread.sleep(2000)
-            rule.onNodeWithText("Перевести").assertIsDisplayed()
+        rule.onNodeWithTag("HELP_WITH_MONEY_BTN_TAG").performClick()
+
+        rule.waitUntil {
+            rule
+                .onAllNodesWithTag("HELP_MONEY_DIALOG_TAG")
+                .fetchSemanticsNodes()
+                .size == 1
         }
     }
 }
