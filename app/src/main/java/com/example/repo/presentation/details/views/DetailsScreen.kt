@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -152,8 +153,11 @@ fun DetailsScreen(
                                 )
                             }
 
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                IconButton(onClick = {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally) {
+                                IconButton(
+                                    modifier = Modifier.testTag("HELP_WITH_MONEY_BTN_TAG"),
+                                    onClick = {
                                     viewModel.run {
                                         obtainIntent(
                                             DetailsIntent.SelectBottomItemIntent(BottomIcons.MONEY)

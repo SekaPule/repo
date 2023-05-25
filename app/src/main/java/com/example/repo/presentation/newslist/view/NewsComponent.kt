@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -30,7 +31,8 @@ fun NewsComponent(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onClick.invoke() },
+            .clickable { onClick.invoke() }
+            .testTag("NEWS_ITEM_${newsView.id}_TAG"),
         shape = RoundedCornerShape(2.dp),
         colors = CardDefaults.cardColors(
             containerColor = AppTheme.colors.white

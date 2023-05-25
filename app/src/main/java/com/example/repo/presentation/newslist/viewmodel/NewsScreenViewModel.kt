@@ -1,6 +1,7 @@
 package com.example.repo.presentation.newslist.viewmodel
 
 import android.util.Log
+import androidx.annotation.OpenForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,16 +9,19 @@ import com.example.repo.domain.interactor.InitDataForCurrentSessionUseCase
 import com.example.search_feature.interactor.GetNewsUseCase
 import com.example.search_feature.presentation.mapper.NewsViewMapper
 import com.example.search_feature.presentation.model.NewsView
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class NewsScreenViewModel @Inject constructor(
+@OpenForTesting
+open class NewsScreenViewModel @Inject constructor(
     private val getNewsUseCase: GetNewsUseCase,
     private val initDataForCurrentSessionUseCase: InitDataForCurrentSessionUseCase,
-    private val newsViewMapper: NewsViewMapper
+    private val newsViewMapper: NewsViewMapper,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : ViewModel() {
 
     private val _notCheckedNewsCounter = MutableStateFlow(0)
@@ -30,7 +34,7 @@ class NewsScreenViewModel @Inject constructor(
     val openFilters: LiveData<Boolean> = _openFilters
 
     private var _news = MutableStateFlow(emptyList<NewsView>())
-    val news = _news.asStateFlow()
+    open val news = _news.asStateFlow()
     var allNews = emptyList<NewsView>()
 
     fun obtainIntent(newsIntent: NewsIntent) {
@@ -41,7 +45,7 @@ class NewsScreenViewModel @Inject constructor(
     }
 
     fun initNews() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             getNewsUseCase.execute().collect { newsList ->
                 allNews = newsList.map { domainModel ->
                     newsViewMapper.mapFromDomainModel(type = domainModel)
@@ -54,7 +58,7 @@ class NewsScreenViewModel @Inject constructor(
     }
 
     fun initData() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             initDataForCurrentSessionUseCase.execute()
         }
     }
